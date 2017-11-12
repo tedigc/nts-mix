@@ -4,15 +4,18 @@
   "description": "A web application for compiling playlists for NTS radio shows",
   "main": "server/src/index.js",
   "scripts": {
-    "start": "nodemon server/src/index.js --variables --exec babel-node",
+    "start": "concurrently \"npm run server\" \"npm run client\"",
     "start-cli": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "server": "nodemon server/src/index.js --variables --exec babel-node",
+    "client": "cd client && npm start"
   },
   "author": "tedigc",
   "license": "ISC",
   "devDependencies": {
+    "concurrently": "^3.5.0",
     "nodemon": "^1.12.1"
   },
   "dependencies": {
@@ -20,6 +23,7 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-register": "^6.26.0",
     "body-parser": "^1.18.2",
+    "cheerio": "^1.0.0-rc.2",
     "create-react-app": "^1.4.3",
     "express": "^4.16.2",
     "morgan": "^1.9.0",
