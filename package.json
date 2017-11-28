@@ -26,6 +26,7 @@
     "cheerio": "^1.0.0-rc.2",
     "create-react-app": "^1.4.3",
     "express": "^4.16.2",
+    "googleapis": "^23.0.0",
     "morgan": "^1.9.0",
     "path": "^0.12.7",
     "react": "^16.1.0",

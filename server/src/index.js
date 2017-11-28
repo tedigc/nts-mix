@@ -8,7 +8,13 @@ import path       from 'path';
 import bodyParser from 'body-parser';
 import request    from 'request';
 import cheerio    from 'cheerio';
+import google     from 'googleapis';
 
+// config
+import config from '../config';
+
+// initialise app
+let service = google.youtube('v3');
 let port = process.env.PORT || 8080; 
 let app  = express();
 
@@ -33,6 +39,7 @@ app.post('/api/submit', (req, res) => {
       for(let i=1; i<element.children.length; i+=2) {
         let trackTitle = element.children[i].children[0].data;
         tracklist.push(trackTitle);
+        console.log(trackTitle);
       }
 
       res.status(200).json( { 
@@ -41,6 +48,30 @@ app.post('/api/submit', (req, res) => {
       });  
     }
   });
+});
+
+app.get('/api/search/:keywords', (req, res) => {
+  console.log();
+
+  let parameters = {
+    key       : config.youtubeApiKey,
+    part      : "snippet",
+    type      : "video",
+    q         : req.params.keywords,
+    maxResults: 3,
+    order     : "viewCount",
+  };
+
+  service.search.list(parameters, (err, response) => {
+    if(err) {
+      console.error(err);
+      res.json(err);
+    } else {
+      res.status(200).json(response);
+    }
+  });
+
+  console.log();
 });
 
 // serve up web application
