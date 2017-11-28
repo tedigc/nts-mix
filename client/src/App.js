@@ -2,12 +2,22 @@
 
 import React, { Component } from 'react';
 import axios from 'axios';
+import { injectGlobal } from 'styled-components';
 
-/**
- * example NTS search: https://www.nts.live/shows/sun-cut/episodes/sun-cut-27th-november-2017
- */
+// set style and fonts
+import myfont from './UniversCondensed.ttf';
+import './index.css';
 
- let API_KEY = "";
+injectGlobal`
+  @font-face {
+    font-family: 'UniversCondensed';
+    src: local('UniversCondensed'), url(${myfont}) format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+`;
+
+let API_KEY = "";
 
 class App extends Component {
 
@@ -86,21 +96,21 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-
+        <h2>WELCOME TO NTS MIX</h2>
         <p>{this.state.gapiReady}</p>
 
         {/* NTS Track List Search */}
         <form onSubmit={this.handleSubmit}>
-          <input type="text" name="nts-link" value={this.state.url} onChange={this.handleChange} />
-          <button>Search NTS</button>
+          <input type="text" name="nts-link" value={this.state.url} onChange={this.handleChange}/>
+          <button>SEARCH NTS</button>
         </form>
 
-        <hr/>
+        <br/>
 
         {/* Temporary YouTube API Test */}
         <form onSubmit={this.apiTest}>
-          <input type="text" name="yt-search" value={this.state.search} onChange={this.handleChange} />
-          <button>Search YouTube</button>
+          <input type="text" name="yt-search" value={this.state.search} onChange={this.handleChange}/>
+          <button className="button" >SEARCH YOUTUBE</button>
         </form>
 
       </div>
