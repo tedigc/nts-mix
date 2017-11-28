@@ -17,7 +17,7 @@ app.use(express.static(path.join(__dirname, '../../client/build')));
 app.use(bodyParser.json());
 app.use(morgan('dev'));
 
-// submit a URL
+// submit a URL for an NTS show, and webscrape to find the tracklist
 app.post('/api/submit', (req, res) => {
   console.log(req.body.url);
   request.get(req.body.url, (err, response, body) => {
@@ -48,11 +48,12 @@ app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, '../../client/build/index.html'));
 });
 
+// set up server to listen on the given port
 let server = app.listen(port, (err) => {
   if(err) {
     console.error(err);
   } else {
-    let host = server.address().address;
+    let host = (server.address().address === "::") ? ("localhost") : (server.address().address);
     let port = server.address().port;
     console.info("🌎  Server listening at http://%s:%s", host, port);
   }
