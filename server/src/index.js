@@ -9,6 +9,9 @@ import bodyParser from 'body-parser';
 import request    from 'request';
 import cheerio    from 'cheerio';
 import google     from 'googleapis';
+import googleAuth from 'google-auth-library';
+import axios from 'axios';
+import util from 'util';
 
 // config
 import config from '../config';
@@ -23,9 +26,71 @@ app.use(express.static(path.join(__dirname, '../../client/build')));
 app.use(bodyParser.json());
 app.use(morgan('dev'));
 
-// submit a URL for an NTS show, and webscrape to find the tracklist
+import client_secret from '../client_secret.json';
+
+let CLIENT_ID = client_secret.web.client_id;
+let CLIENT_SECRET = client_secret.web.client_secret;
+let REDIRECT_URL = client_secret.web.redirect_uris[0];
+let SCOPES = [
+  'https://www.googleapis.com/auth/youtube',
+  'https://www.googleapis.com/auth/youtube.upload'
+];
+
+let auth = new googleAuth();
+let OAuth2Client = google.auth.OAuth2;
+let oauth2Client = new auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URL);
+
+/**
+ * test creating a playlist
+ */
+app.post('/api/playlist', (req, res) => {
+
+  let authURL = oauth2Client.generateAuthUrl({
+    access_type: 'offline',
+    scope: SCOPES
+  });
+
+  res.json({ url : authURL });
+
+  /**
+   * https://github.com/google/google-api-nodejs-client/blob/master/samples/sampleclient.js
+   * 
+   * above is a link to a useful file in a GitHub repo
+   * 
+   * in the program's current state, the user is able to generate a google sign in URL by making a post request to '/api/playlist'
+   */
+
+});
+
+app.post('/api/key', (req, res) => {
+
+  let authCode = req.body.authCode;
+  console.log(authCode);
+
+  oauth2Client.getToken(authCode, (err, token) => {
+    if(err) {
+      console.error(err);
+      res.status(500).json(err);
+    } else {
+      res.json(token);
+    }
+  });
+  
+});
+
+/**
+ * create a playlist
+ */
+app.post('/api/playlist', (req, res) => {
+  console.log("creating playlist");
+  res.sendStatus(200);
+});
+
+
+/**
+ * submit a URL for an NTS show, and webscrape to find the tracklist
+ */ 
 app.post('/api/submit', (req, res) => {
-  console.log(req.body.url);
   request.get(req.body.url, (err, response, body) => {
     if(err) {
       console.log("error");
@@ -39,7 +104,6 @@ app.post('/api/submit', (req, res) => {
       for(let i=1; i<element.children.length; i+=2) {
         let trackTitle = element.children[i].children[0].data;
         tracklist.push(trackTitle);
-        console.log(trackTitle);
       }
 
       res.status(200).json( { 
@@ -50,8 +114,10 @@ app.post('/api/submit', (req, res) => {
   });
 });
 
+/**
+ * test using the youtube search api
+ */
 app.get('/api/search/:keywords', (req, res) => {
-  console.log();
 
   let parameters = {
     key       : config.youtubeApiKey,
@@ -70,16 +136,18 @@ app.get('/api/search/:keywords', (req, res) => {
       res.status(200).json(response);
     }
   });
-
-  console.log();
 });
 
-// serve up web application
+/**
+ * serve up web application
+ */ 
 app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, '../../client/build/index.html'));
 });
 
-// set up server to listen on the given port
+/**
+ * set up server to listen on the given port
+ */ 
 let server = app.listen(port, (err) => {
   if(err) {
     console.error(err);
