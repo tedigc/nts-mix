@@ -1,3 +1,4 @@
+// enable es6 syntax
 require('babel-register')({
   "presets": ["es2015"]
 });
@@ -19,6 +20,7 @@ app.use(morgan('dev'));
 // set up routes
 import auth from './controllers/auth';
 import nts  from './controllers/nts';
+
 app.use('/api/auth', auth);
 app.use('/api/nts', nts);
 

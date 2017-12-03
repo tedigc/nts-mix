@@ -11,6 +11,7 @@ let service = google.youtube('v3');
  */
 app.get('/api/search/:keywords', (req, res) => {
   
+  // define parameters
   let parameters = {
     key       : config.youtubeApiKey,
     part      : "snippet",
@@ -20,6 +21,7 @@ app.get('/api/search/:keywords', (req, res) => {
     order     : "viewCount",
   };
 
+  // commence search
   service.search.list(parameters, (err, response) => {
     if(err) {
       console.error(err);
@@ -28,7 +30,7 @@ app.get('/api/search/:keywords', (req, res) => {
       res.status(200).json(response);
     }
   });
-  
+
 });
 
   

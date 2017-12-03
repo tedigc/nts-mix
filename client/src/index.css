@@ -25,4 +25,18 @@ button {
     width: 120px;
     height: 30px;
     border: 1px solid white;
+    transition: all .25s ease 0s;
+    -moz-transition: all .25s ease 0s;
+    -webkit-transition: all .25s ease 0s;
+    -o-transition: all .25s ease 0s;
+}
+
+button:hover:enabled {
+    background-color: #FFFFFF;
+    color: #000000;
+}
+
+button:disabled {
+    color: #777777;
+    border-color: #777777;
 }
