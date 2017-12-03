@@ -1,5 +1,10 @@
 /* global gapi */
 
+/**
+ * USEFUL LINKS:
+ *  - https://developers.google.com/youtube/v3/guides/auth/client-side-web-apps
+ */
+
 import React, { Component } from 'react';
 import axios from 'axios';
 import { injectGlobal } from 'styled-components';
@@ -18,8 +23,6 @@ injectGlobal`
   }
 `;
 
-let API_KEY = "";
-
 class App extends Component {
 
   state = {
@@ -29,24 +32,30 @@ class App extends Component {
     tracklist : [],
     code      : '',
     token     : '',
+    isAuthorized : false,
+    GoogleAuth : {}
   };
 
   constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
     this.findTracklist = this.findTracklist.bind(this);
-    this.apiTest = this.apiTest.bind(this);
-    this.login = this.login.bind(this);
+    this.handleAuthClick = this.handleAuthClick.bind(this);
     this.createPlaylist = this.createPlaylist.bind(this);
   }
 
   componentDidMount() {
-    this.loadYoutubeAPI();
-    let search = this.props.location.search;
+    // this.loadYoutubeAPI();
+    let { search } = this.props.location;
     if(search.includes("?code=")) {
+
+      // extract code from url
       let code = decodeURIComponent(this.props.location.search.split("=")[1]);
+      // if(code.charAt(code.length) === '#') code = code.slice(0, -1);
       console.log(code);
       this.setState({ code });
+
+      // obtain access key 
       console.log("Access granted. Obtaining key.");
       axios.post('/api/key', { authCode : code })
         .then((response) => {
@@ -60,19 +69,22 @@ class App extends Component {
     }
   }
 
-  loadYoutubeAPI() {
-    const script = document.createElement("script");
-    script.src = "https://apis.google.com/js/api.js";
-    script.onload = () => {
-      gapi.load('client', () => {
-        gapi.client.setApiKey(API_KEY);
-        gapi.client.load('youtube', 'v3', () => {
-          this.setState({ gapiReady: true });
+  handleAuthClick(e) {
+    e.preventDefault();
+    let { isAuthorized } = this.state;
+    if(!isAuthorized) {
+      // log in
+      axios.get('/api/auth')
+        .then((res) => {
+          window.location = res.data.url;
+        })
+        .catch((err) => {
+          console.error(err);
         });
-      });
+    } else {
+      // log out
+      console.log('logout');
     }
-
-    document.body.appendChild(script);
   }
 
   handleChange(e) {
@@ -88,49 +100,30 @@ class App extends Component {
   findTracklist(e) {
     e.preventDefault();
     const { url } = this.state;
-    axios.post('/api/submit', { url })
+    axios.post('/api/tracklist', { url })
       .then((result) => {
         this.setState({ tracklist : result.data.tracklist });     
       });
   }
 
-  apiTest(e) {
-    e.preventDefault();
-    let { search } = this.state;
-    let request = gapi.client.youtube.search.list({
-      part      : "snippet",
-      type      : "video",
-      q         : this.state.search,
-      maxResults: 3,
-      order     : "viewCount",
+  createPlaylist() {
+    console.log("creating playlist");
+
+    let request = gapi.client.youtube.playlists.insert({
+      part: 'snippet, status',
+      resource: {
+        snippet: {
+          title: 'Test Playlist',
+          description: 'Ayy Lmao'
+        },
+        status: {
+          privacyStatus: 'private'
+        }
+      }
     });
     request.execute((res) => {
       console.log(res);
     });
-    console.log(`API Test - ${search}`);
-  }
-
-  login(e) {
-    e.preventDefault();
-    console.log("Tesing API");
-    axios.post('/api/playlist', {})
-      .then((result) => {
-        window.location = result.data.url;
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }
-
-  createPlaylist() {
-    console.log("creating playlist");
-    axios.post('/api/playlist', this.state.token)
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
   }
 
   /**
@@ -146,11 +139,13 @@ class App extends Component {
   }
 
   render() {
+    let { isAuthorized } = this.state;
+    let loginText = (isAuthorized) ? 'LOG OUT' : 'LOG IN';
     return (
       <div className="App">
         <h1>WELCOME TO NTS MIX</h1>
 
-        <button onClick={this.login}>LOG IN</button>
+        <button onClick={this.handleAuthClick}>{loginText}</button>
         <button onClick={this.createPlaylist} style={{ marginLeft: 10 }}>CREATE PLAYLIST</button>
         
         <br/>

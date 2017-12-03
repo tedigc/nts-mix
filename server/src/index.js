@@ -28,13 +28,10 @@ app.use(morgan('dev'));
 
 import client_secret from '../client_secret.json';
 
-let CLIENT_ID = client_secret.web.client_id;
+let CLIENT_ID     = client_secret.web.client_id;
 let CLIENT_SECRET = client_secret.web.client_secret;
-let REDIRECT_URL = client_secret.web.redirect_uris[0];
-let SCOPES = [
-  'https://www.googleapis.com/auth/youtube',
-  'https://www.googleapis.com/auth/youtube.upload'
-];
+let REDIRECT_URL  = client_secret.web.redirect_uris[0];
+let SCOPES        = [ 'https://www.googleapis.com/auth/youtube' ];
 
 let auth = new googleAuth();
 let OAuth2Client = google.auth.OAuth2;
@@ -43,13 +40,15 @@ let oauth2Client = new auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URL);
 /**
  * test creating a playlist
  */
-app.post('/api/playlist', (req, res) => {
+app.get('/api/auth', (req, res) => {
+
+  // let authURL = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URL}&scope=${SCOPES}&access_type=offline`;
+  // res.json({ url : authURL });
 
   let authURL = oauth2Client.generateAuthUrl({
     access_type: 'offline',
     scope: SCOPES
   });
-
   res.json({ url : authURL });
 
   /**
@@ -65,16 +64,94 @@ app.post('/api/playlist', (req, res) => {
 app.post('/api/key', (req, res) => {
 
   let authCode = req.body.authCode;
-  console.log(authCode);
-
   oauth2Client.getToken(authCode, (err, token) => {
     if(err) {
-      console.error(err);
+      console.log(err);
       res.status(500).json(err);
     } else {
-      res.json(token);
+      oauth2Client.credentials = token;
+      let parameters = {
+        part: 'snippet, status',
+        resource: {
+          snippet: {
+            title: 'Test Playlist',
+            description: 'Ayy Lmao'
+          },
+          status: {
+            privacyStatus: 'private'
+          }
+        }
+      };
+      parameters['auth'] = oauth2Client;
+
+      // service.playlists.insert(parameters, (error, response) => {
+      //   if(error) {
+      //     res.status(500).json(error);
+      //   } else {
+      //     res.json(response);          
+      //   }
+      // });
+      
+      // let parameters = {
+      //   'maxResults': '25',
+      //   'part': 'snippet',
+      //   'q': 'keyboard',
+      //   'type':''
+      // }
+      // parameters['auth'] = oauth2Client;
+
+      // service.search.list(parameters, (error, response) => {
+      //   if(error) {
+      //     res.status(500).json(error);
+      //   } else {
+      //     res.json(response);          
+      //   }
+      // });
     }
   });
+
+  // console.log(req.body.authCode);
+  // let authCode = encodeURIComponent(req.body.authCode);
+  // console.log(authCode);
+  // let keyURL = `https://www.googleapis.com/oauth2/v4/token`;
+  // // let keyURL = `https://www.googleapis.com/oauth2/v4/token?code=${authCode}&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&redirect_uri=${REDIRECT_URL}&grant_type=authorization_code`;
+  // let parameters = {
+  //   code          : authCode,
+  //   client_id     : CLIENT_ID,
+  //   client_secret : CLIENT_SECRET,
+  //   redirect_uri  : REDIRECT_URL,
+  //   grant_type    : 'authorization_code'
+  // };
+  // axios.post(keyURL, parameters)
+  //   .then((response) => {
+  //     console.log("SUCCESS");
+  //     console.log(response);
+  //     res.send(response);
+  //   })
+  //   .catch((error) => {
+  //     console.error("ERROR");
+  //     console.error(error);
+  //     res.status(500).json(error);
+  //   });
+
+  // axios.post(keyURL, parameters)
+  //   .then((response) => {
+  //     res.json(response);
+  //   })
+  //   .error((error) => {
+  //     console.log(error);
+  //     res.json(error);
+  //   })
+
+
+  // oauth2Client.getToken(authCode, (err, token) => {
+  //   if(err) {
+  //     console.error(err);
+  //     res.status(500).json(err);
+  //   } else {
+  //     res.json(token);
+  //   }
+  // });
   
 });
 
@@ -90,7 +167,7 @@ app.post('/api/playlist', (req, res) => {
 /**
  * submit a URL for an NTS show, and webscrape to find the tracklist
  */ 
-app.post('/api/submit', (req, res) => {
+app.post('/api/tracklist', (req, res) => {
   request.get(req.body.url, (err, response, body) => {
     if(err) {
       console.log("error");
