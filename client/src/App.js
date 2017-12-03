@@ -57,7 +57,7 @@ class App extends Component {
 
       // obtain access key 
       console.log("Access granted. Obtaining key.");
-      axios.post('/api/key', { authCode : code })
+      axios.post('/api/auth/token', { authCode : code })
         .then((response) => {
           console.log("token received");
           console.log(response.data);
@@ -74,7 +74,7 @@ class App extends Component {
     let { isAuthorized } = this.state;
     if(!isAuthorized) {
       // log in
-      axios.get('/api/auth')
+      axios.get('/api/auth/code')
         .then((res) => {
           window.location = res.data.url;
         })
@@ -100,7 +100,7 @@ class App extends Component {
   findTracklist(e) {
     e.preventDefault();
     const { url } = this.state;
-    axios.post('/api/tracklist', { url })
+    axios.post('/api/nts/tracklist', { url })
       .then((result) => {
         this.setState({ tracklist : result.data.tracklist });     
       });
