@@ -19,10 +19,15 @@ input {
     margin-right: 10px;
 }
 
+input:disabled {
+    color: #777777;
+    border-color: #777777;
+}
+
 button {
     background-color: #000000;
     color: #FFFFFF;
-    width: 120px;
+    width: 140px;
     height: 30px;
     border: 1px solid white;
     transition: all .25s ease 0s;
