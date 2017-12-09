@@ -6,8 +6,8 @@ import { injectGlobal } from 'styled-components';
 import Track from './Track';
 
 // set style and fonts
-import myfont from './UniversCondensed.ttf';
-import './index.css';
+import myfont from './style/UniversCondensed.ttf';
+import './style/index.css';
 
 injectGlobal`
   @font-face {
@@ -29,13 +29,18 @@ let GoogleAuth;
 class App extends Component {
 
   state = {
-    gapiReady    : false,
-    isAuthorized : false,
-    dj           : '',
-    tracklist    : [],
-    url          : 'https://www.nts.live/shows/sun-cut/episodes/sun-cut-27th-november-2017',
-    playlistId   : '',
-    status       : ''
+    gapiReady   : false,
+    isAuthorized: false,
+    mix          : {
+      dj         : '',
+      description: '',
+      location   : '',
+      date       : '',
+      tracklist  : []
+    },
+    url       : 'https://www.nts.live/shows/sun-cut/episodes/sun-cut-27th-november-2017',
+    playlistId: '',
+    status    : ''
   };
 
   constructor(props) {
@@ -114,9 +119,11 @@ class App extends Component {
     const { url } = this.state;
     axios.post('/api/nts/tracklist', { url })
       .then((result) => {
+
+        let { dj, description, location, date, tracklist } = result.data;
+        this.setState({ mix : { dj, description, location, date, tracklist }});
+
         console.log(result.data);
-        let { dj, tracklist } = result.data;
-        this.setState({ dj, tracklist });
 
         Promise.all(tracklist.map((track) => {
             return this.searchForTrack(track);
@@ -126,7 +133,7 @@ class App extends Component {
             for(let result of response) {
               trackIds.push(result.items[0].id.videoId);
             }
-            this.createPlaylist(trackIds);
+            this.createPlaylist(dj, description, location, date, trackIds);
           });
       });
   }
@@ -174,17 +181,19 @@ class App extends Component {
    * Create a brand new playlist, and fill it with a collection of tracks based on IDs
    * @param {array} trackIds 
    */
-  createPlaylist(trackIds) {
+  createPlaylist(dj, description, location, date, trackIds) {
 
     this.setState({ status : 'CREATING PLAYLIST'});
+
+    let title = `${dj} - ${location} ${date} | NTS mix`;
 
     // define parameters
     let parameters = {
       part: 'snippet, status',
       resource: {
         snippet: {
-          title: 'Test Playlist',
-          description: 'Test playlist for NTS mix'
+          title: title,
+          description: description
         },
         status: {
           privacyStatus: 'private'
@@ -255,17 +264,25 @@ class App extends Component {
    * returns a list of track components
    */
   tracklist() {
-    let tracklist = this.state.tracklist.map((track, key) => {
+    let { dj, description, tracklist } = this.state.mix;
+    let tracklistComponent = tracklist.map((track, key) => {
       let artist = track.split("-")[0].trim();
       let title  = track.split("-")[1].trim();
       return <Track key={key} artist={artist} title={title}/>
     });
-    return (
-      <div>
-        <h1>{this.state.dj.toUpperCase()}</h1>
-        {tracklist}
-      </div>
-    );
+    if(tracklist.length > 0) {
+      return (
+        <div>
+          <h1>{dj.toUpperCase()}</h1>
+          <p>{description}</p>
+          <hr/>
+          {tracklistComponent}
+        </div>
+      );
+    } else {
+      return '';
+    }
+
   }
 
   render() {
@@ -295,7 +312,7 @@ class App extends Component {
 
         {/* NTS Track List Search */}
         <form onSubmit={this.findTracklist}>
-          <input type="text" name="nts-link" value={this.state.url.toUpperCase()} disabled={!gapiReady || !isAuthorized} onChange={this.handleChange}/>
+          <input type="text" name="nts-link" value={this.state.url} disabled={!gapiReady || !isAuthorized} onChange={this.handleChange}/>
           <button value={this.state.url} disabled={!gapiReady || !isAuthorized}>SEARCH NTS</button>
         </form>
 

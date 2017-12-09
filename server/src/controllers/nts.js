@@ -18,20 +18,31 @@ router.post('/tracklist', (req, res) => {
       const $ = cheerio.load(body);
 
       // get the DJ name
-      let title = $('h1[class=text-bold]');
-      let dj = title['0'].children[0].data;
+      let djElement = $('h1[class=text-bold]');
+      let dj = djElement['0'].children[0].data;
+
+      // get the description
+      let descriptionElement = $('div[class=description]');
+      let description = descriptionElement['0'].children[1].children[0].data;
+
+      // get the location
+      let locationDateElement = $('div[class=bio__title__subtitle]');
+      let location = locationDateElement['0'].children[1].children[0].data;
+
+      // get the date
+      let date = locationDateElement['0'].children[3].children[0].data;
 
       // get the list of tracks
-      let tracks = $('li[class=show]');
+      let tracklistElement = $('li[class=show]');
       let tracklist = [];
-      for(let key of Object.keys(tracks)) {
-        if(tracks[key].hasOwnProperty('attribs') && tracks[key].attribs.class === 'show') {
-          tracklist.push(tracks[key].children[0].data);
+      for(let key of Object.keys(tracklistElement)) {
+        if(tracklistElement[key].hasOwnProperty('attribs') && tracklistElement[key].attribs.class === 'show') {
+          tracklist.push(tracklistElement[key].children[0].data);
         }
       }
 
       // send results to the client
-      res.json({ dj, tracklist });
+      res.json({ dj, description, location, date, tracklist });
 
     }
   });
