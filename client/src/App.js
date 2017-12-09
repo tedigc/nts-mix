@@ -31,6 +31,7 @@ class App extends Component {
   state = {
     gapiReady    : false,
     isAuthorized : false,
+    dj           : '',
     tracklist    : [],
     url          : 'https://www.nts.live/shows/sun-cut/episodes/sun-cut-27th-november-2017',
     playlistId   : '',
@@ -113,8 +114,9 @@ class App extends Component {
     const { url } = this.state;
     axios.post('/api/nts/tracklist', { url })
       .then((result) => {
-        let { tracklist } = result.data;
-        this.setState({ tracklist });
+        console.log(result.data);
+        let { dj, tracklist } = result.data;
+        this.setState({ dj, tracklist });
 
         Promise.all(tracklist.map((track) => {
             return this.searchForTrack(track);
@@ -125,7 +127,6 @@ class App extends Component {
               trackIds.push(result.items[0].id.videoId);
             }
             this.createPlaylist(trackIds);
-            // this.addAllSongs([0, 1, 2, 3, 4]);
           });
       });
   }
@@ -156,7 +157,7 @@ class App extends Component {
     let parameters = {
       part      : 'snippet',
       mine      : true,
-      maxResultd: 25
+      maxResults: 25
     };
 
     let request = gapi.client.youtube.playlists.list(parameters);
@@ -246,7 +247,7 @@ class App extends Component {
           });
 
         });
-      })
+      });
     }
   }
 
@@ -259,7 +260,12 @@ class App extends Component {
       let title  = track.split("-")[1].trim();
       return <Track key={key} artist={artist} title={title}/>
     });
-    return tracklist;
+    return (
+      <div>
+        <h1>{this.state.dj.toUpperCase()}</h1>
+        {tracklist}
+      </div>
+    );
   }
 
   render() {
@@ -289,7 +295,7 @@ class App extends Component {
 
         {/* NTS Track List Search */}
         <form onSubmit={this.findTracklist}>
-          <input type="text" name="nts-link" value={this.state.url} disabled={!gapiReady || !isAuthorized} onChange={this.handleChange}/>
+          <input type="text" name="nts-link" value={this.state.url.toUpperCase()} disabled={!gapiReady || !isAuthorized} onChange={this.handleChange}/>
           <button value={this.state.url} disabled={!gapiReady || !isAuthorized}>SEARCH NTS</button>
         </form>
 

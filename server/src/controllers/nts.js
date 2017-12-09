@@ -16,20 +16,22 @@ router.post('/tracklist', (req, res) => {
 
       // load the html
       const $ = cheerio.load(body);
-      let element = $('.shows')['0'];
-      let tracklist = [];
 
-      // search through the tracklist elements and put them in an array
-      for(let i=1; i<element.children.length; i+=2) {
-        let trackTitle = element.children[i].children[0].data;
-        tracklist.push(trackTitle);
+      // get the DJ name
+      let title = $('h1[class=text-bold]');
+      let dj = title['0'].children[0].data;
+
+      // get the list of tracks
+      let tracks = $('li[class=show]');
+      let tracklist = [];
+      for(let key of Object.keys(tracks)) {
+        if(tracks[key].hasOwnProperty('attribs') && tracks[key].attribs.class === 'show') {
+          tracklist.push(tracks[key].children[0].data);
+        }
       }
 
-      // send array of tracklists to the client
-      res.status(200).json( { 
-        success : true,
-        tracklist 
-      });  
+      // send results to the client
+      res.json({ dj, tracklist });
 
     }
   });

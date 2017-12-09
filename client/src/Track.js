@@ -7,7 +7,7 @@ class Track extends React.Component {
     let { artist, title } = this.props;
     return (
       <div>
-        <p>{artist} - {title}</p>
+        <span>{artist} - {title}</span>
       </div>
     );
   }
