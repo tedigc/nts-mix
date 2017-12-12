@@ -18,10 +18,7 @@ app.use(bodyParser.json());
 app.use(morgan('dev'));
 
 // set up routes
-import auth from './controllers/auth';
 import nts  from './controllers/nts';
-
-app.use('/api/auth', auth);
 app.use('/api/nts', nts);
 
 // serve web application

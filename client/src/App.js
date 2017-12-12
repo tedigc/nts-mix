@@ -129,9 +129,13 @@ class App extends Component {
             return this.searchForTrack(track);
           }))
           .then((response) => {
+            console.log(response);
             let trackIds = [];
             for(let result of response) {
-              trackIds.push(result.items[0].id.videoId);
+              console.log(result);
+              if(result.pageInfo.totalResults > 0) {
+                trackIds.push(result.items[0].id.videoId);
+              }
             }
             this.createPlaylist(dj, description, location, date, trackIds);
           });

@@ -7,15 +7,17 @@
     "start": "concurrently \"npm run server\" \"npm run client\"",
     "start-cli": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "server": "nodemon server/src/index.js --variables --exec babel-node",
-    "client": "cd client && npm start"
+    "client": "cd client && npm start",
+    "test": "NODE_ENV=test ./node_modules/.bin/mocha client/test --timeout 20000  --compilers js:babel-core/register"
   },
   "author": "tedigc",
   "license": "ISC",
   "devDependencies": {
+    "chai": "^4.1.2",
     "concurrently": "^3.5.0",
+    "mocha": "^4.0.1",
     "nodemon": "^1.12.1"
   },
   "dependencies": {
