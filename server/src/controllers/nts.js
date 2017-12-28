@@ -5,7 +5,7 @@ import cheerio from 'cheerio';
 let router = express.Router();
 
 /**
- * submit a URL for an NTS show, and webscrape to find the tracklist
+ * Submit a URL for an NTS show, and webscrape to find the tracklist.
  */ 
 router.post('/tracklist', (req, res) => {
   request.get(req.body.url, (err, response, body) => {
@@ -14,25 +14,25 @@ router.post('/tracklist', (req, res) => {
       res.status(500).json(err);
     } else {
 
-      // load the html
+      // Load the html.
       const $ = cheerio.load(body);
 
-      // get the DJ name
+      // Get the DJ name.
       let djElement = $('h1[class=text-bold]');
       let dj = djElement['0'].children[0].data;
 
-      // get the description
+      // Get the description.
       let descriptionElement = $('div[class=description]');
       let description = descriptionElement['0'].children[1].children[0].data;
 
-      // get the location
+      // Get the location.
       let locationDateElement = $('div[class=bio__title__subtitle]');
       let location = locationDateElement['0'].children[1].children[0].data;
 
-      // get the date
+      // Get the date.
       let date = locationDateElement['0'].children[3].children[0].data;
 
-      // get the list of tracks
+      // Get the list of tracks.
       let tracklistElement = $('li[class=show]');
       let tracklist = [];
       for(let key of Object.keys(tracklistElement)) {
@@ -41,7 +41,7 @@ router.post('/tracklist', (req, res) => {
         }
       }
 
-      // send results to the client
+      // Send results to the client.
       res.json({ dj, description, location, date, tracklist });
 
     }

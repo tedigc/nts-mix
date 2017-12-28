@@ -1,44 +1,54 @@
+@font-face {
+    font-family: 'UniversCondensed';
+    src: local('UniversCondensed'), url(./fonts/UniversCondensed.woff) format('woff');
+}
+
 * {
     font-family: UniversCondensed;
 }
 
 body {
     background-color: #000000;
-    color: #FFFFFF;
-    margin-top: 40px;
+    color           : #FFFFFF;
+    margin-top : 40px;
     margin-left: 40px;
 }
 
 input {
-    outline-color: #FFFFFF;
-    color: #FFFFFF;
+    outline-color   : #FFFFFF;
+    color           : #FFFFFF;
     background-color: #000000;
-    width: 400px;
+    width : 500px;
     height: 26px;
     border: 1px solid white;
     margin-right: 10px;
 }
 
+form {
+    margin: auto;
+    width : 50%;
+}
+
 input:disabled {
-    color: #777777;
+    color       : #777777;
     border-color: #777777;
 }
 
 button {
     background-color: #000000;
-    color: #FFFFFF;
-    width: 140px;
+    color           : #FFFFFF;
+    width : 180px;
     height: 30px;
     border: 1px solid white;
     transition: all .25s ease 0s;
-    -moz-transition: all .25s ease 0s;
+    -moz-transition   : all .25s ease 0s;
     -webkit-transition: all .25s ease 0s;
-    -o-transition: all .25s ease 0s;
+    -o-transition     : all .25s ease 0s;
 }
 
 button:hover:enabled {
     background-color: #FFFFFF;
-    color: #000000;
+    color           : #000000;
 }
 
 button:disabled {

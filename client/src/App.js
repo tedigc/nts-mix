@@ -2,27 +2,14 @@
 
 import React, { Component } from 'react';
 import axios from 'axios';
-import { injectGlobal } from 'styled-components';
 import Track from './Track';
-
-// set style and fonts
-import myfont from './style/UniversCondensed.ttf';
 import './style/index.css';
 
-injectGlobal`
-  @font-face {
-    font-family: 'UniversCondensed';
-    src: local('UniversCondensed'), url(${myfont}) format('truetype');
-    font-weight: normal;
-    font-style: normal;
-  }
-`;
-
-const API_KEY        = 'AIzaSyB4gUJOW_UWz7u-OVeA9DFDFC8HBRxf1HY'; // API key is restricted, so can be public
-const CLIENT_ID      = '859070380405-o07ctoojjj77p6hqvo1qu04o8jr28k6t.apps.googleusercontent.com';
-const SCOPE          = 'https://www.googleapis.com/auth/youtube';
-const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest"];
-const DO_NOT_DELETE  = 'PLQ3YpXF4Wmw85ntSyGtW3_b8Up02Yw66V'; // playlist ID. doesn't really matter if this goes public
+const API_KEY        =  'AIzaSyB4gUJOW_UWz7u-OVeA9DFDFC8HBRxf1HY';    // API key is restricted, so can be public
+const CLIENT_ID      =  '859070380405-o07ctoojjj77p6hqvo1qu04o8jr28k6t.apps.googleusercontent.com';
+const SCOPE          =  'https://www.googleapis.com/auth/youtube';
+const DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest'];
+const DO_NOT_DELETE  =  'PLQ3YpXF4Wmw85ntSyGtW3_b8Up02Yw66V';         // playlist ID. doesn't really matter if this goes public
 
 let GoogleAuth;
 
@@ -45,16 +32,18 @@ class App extends Component {
 
   constructor(props) {
     super(props);
-    this.initClient = this.initClient.bind(this);
-    this.handleAuthClick = this.handleAuthClick.bind(this);
-
-    this.handleChange = this.handleChange.bind(this);
-    this.findTracklist = this.findTracklist.bind(this);
-    this.createPlaylist = this.createPlaylist.bind(this);
+    this.initClient         = this.initClient.bind(this);
+    this.handleAuthClick    = this.handleAuthClick.bind(this);
+    this.handleChange       = this.handleChange.bind(this);
+    this.findTracklist      = this.findTracklist.bind(this);
+    this.createPlaylist     = this.createPlaylist.bind(this);
     this.deleteAllPlaylists = this.deleteAllPlaylists.bind(this);
-    this.deletePlaylist = this.deletePlaylist.bind(this);
+    this.deletePlaylist     = this.deletePlaylist.bind(this);
   }
 
+  /**
+   * Load the YouTube API before the component mounts.
+   */
   componentWillMount() {
     this.loadYoutubeAPI();
   } 
@@ -71,7 +60,7 @@ class App extends Component {
   }
 
   /**
-   * Initialise GAPI client and check the user's sign in status
+   * Initialise GAPI client and check the user's sign in status.
    */
   initClient() {
     gapi.client.init({
@@ -87,11 +76,12 @@ class App extends Component {
         let user = GoogleAuth.currentUser.get();
         let isAuthorized = user.hasGrantedScopes(SCOPE);
         this.setState({ isAuthorized });
-
-        // TODO delay setting LOG IN / LOG OUT text until this has been completed
       });
   }
 
+  /**
+   * Log in or out.
+   */
   handleAuthClick(e) {
     e.preventDefault();
     if(GoogleAuth.isSignedIn.get()) {
@@ -101,6 +91,9 @@ class App extends Component {
     }
   }
 
+  /**
+   * Update the search text field.
+   */
   handleChange(e) {
     e.preventDefault();
     if(e.target.name === "nts-link") {
@@ -109,7 +102,7 @@ class App extends Component {
   }
 
   /**
-   * search NTS for a tracklist, and create a playlist from that
+   * Search NTS for a tracklist, and create a playlist from that.
    */
   findTracklist(e) {
 
@@ -142,12 +135,15 @@ class App extends Component {
       });
   }
 
+  /**
+   * Search for a track using the YouTube API.
+   */
   searchForTrack(track) {
     let parameters = {
-      part : 'snippet',
+      part      : 'snippet',
       maxResults: 5,
-      order: 'relevance',
-      q : track
+      order     : 'relevance',
+      q         : track
     };
     let request = gapi.client.youtube.search.list(parameters);
     return new Promise((resolve, reject) => {
@@ -160,7 +156,7 @@ class App extends Component {
   /**
    * TODO remove this method 
    * 
-   * removes all playlists, except for my own "lectures and talks" playlist
+   * Removes all playlists, except for my own "lectures and talks" playlist.
    */
   deleteAllPlaylists() {
     console.log('Deleting all playlists');
@@ -182,8 +178,7 @@ class App extends Component {
   }
 
   /**
-   * Create a brand new playlist, and fill it with a collection of tracks based on IDs
-   * @param {array} trackIds 
+   * Create a brand new playlist, and fill it with a collection of tracks based on IDs.
    */
   createPlaylist(dj, description, location, date, trackIds) {
 
@@ -216,9 +211,7 @@ class App extends Component {
   }
 
   /**
-   * Delete the YouTube playlist with the given ID
-   * 
-   * @param {string} playlistId 
+   * Delete the YouTube playlist with the given ID.
    */
   deletePlaylist(playlistId) {
 
@@ -229,9 +222,7 @@ class App extends Component {
   }
 
   /**
-   * Given an array of YouTube video IDs, add those videos to the playlist with the specified ID
-   * @param {string}       playlistId 
-   * @param {array:string} trackIds 
+   * Given an array of YouTube video IDs, add those videos to the playlist with the specified ID.
    */
   addAllSongs(playlistId, trackIds) {
     let sequence = Promise.resolve();
@@ -265,7 +256,7 @@ class App extends Component {
   }
 
   /**
-   * returns a list of track components
+   * Returns a list of track components.
    */
   tracklist() {
     let { dj, description, tracklist } = this.state.mix;
