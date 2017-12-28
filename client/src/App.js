@@ -5,11 +5,11 @@ import axios from 'axios';
 import Track from './Track';
 import './style/index.css';
 
-const API_KEY        =  'AIzaSyB4gUJOW_UWz7u-OVeA9DFDFC8HBRxf1HY';    // API key is restricted, so can be public
-const CLIENT_ID      =  '859070380405-o07ctoojjj77p6hqvo1qu04o8jr28k6t.apps.googleusercontent.com';
+const API_KEY        =  'AIzaSyBkgrN0HMZWQzMxgkXMGw2F_ysxFUdDe9o';    // API key is restricted, so can be public.
+const CLIENT_ID      =  '859070380405-1fr4q5kqkkk460ccjianpi78kk14tqig.apps.googleusercontent.com';
 const SCOPE          =  'https://www.googleapis.com/auth/youtube';
 const DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest'];
-const DO_NOT_DELETE  =  'PLQ3YpXF4Wmw85ntSyGtW3_b8Up02Yw66V';         // playlist ID. doesn't really matter if this goes public
+const DO_NOT_DELETE  =  'PLQ3YpXF4Wmw85ntSyGtW3_b8Up02Yw66V';         // Playlist ID. doesn't really matter if this goes public.
 
 let GoogleAuth;
 
@@ -48,6 +48,9 @@ class App extends Component {
     this.loadYoutubeAPI();
   } 
 
+  /**
+   * Load YouTube API.
+   */
   loadYoutubeAPI() {
     console.log('loading youtube api');
     const script = document.createElement("script");
@@ -63,19 +66,24 @@ class App extends Component {
    * Initialise GAPI client and check the user's sign in status.
    */
   initClient() {
+    console.log('Initialising');
     gapi.client.init({
-      'apiKey'   : API_KEY,
-      'clientId' : CLIENT_ID,
-      'scope'    : 'https://www.googleapis.com/auth/youtube',
-      discoveryDocs: DISCOVERY_DOCS
+      'apiKey'     :  API_KEY,
+      'clientId'   :  CLIENT_ID,
+      'scope'      : 'https://www.googleapis.com/auth/youtube',
+      discoveryDocs:  DISCOVERY_DOCS
       })
       .then(() => {
+        console.log(gapi.auth2.getAuthInstance());
         GoogleAuth = gapi.auth2.getAuthInstance();
         GoogleAuth.isSignedIn.listen((isAuthorized) => { this.setState({ isAuthorized }); });
     
         let user = GoogleAuth.currentUser.get();
         let isAuthorized = user.hasGrantedScopes(SCOPE);
         this.setState({ isAuthorized });
+      })
+      .catch((error) => {
+        console.log(error);
       });
   }
 
@@ -84,6 +92,9 @@ class App extends Component {
    */
   handleAuthClick(e) {
     e.preventDefault();
+
+    console.log(GoogleAuth);
+
     if(GoogleAuth.isSignedIn.get()) {
       GoogleAuth.signOut();
     } else {
@@ -183,10 +194,9 @@ class App extends Component {
   createPlaylist(dj, description, location, date, trackIds) {
 
     this.setState({ status : 'CREATING PLAYLIST'});
-
     let title = `${dj} - ${location} ${date} | NTS mix`;
 
-    // define parameters
+    // Define parameters.
     let parameters = {
       part: 'snippet, status',
       resource: {
@@ -200,7 +210,7 @@ class App extends Component {
       }
     };
 
-    // execute request
+    // Execute request.
     let request = gapi.client.youtube.playlists.insert(parameters);
     request.execute((res) => {
       let playlistId = res.id;
@@ -214,7 +224,6 @@ class App extends Component {
    * Delete the YouTube playlist with the given ID.
    */
   deletePlaylist(playlistId) {
-
     let request = gapi.client.youtube.playlists.delete({ id : playlistId });
     request.execute((res) => {
       console.log(res);
@@ -230,7 +239,7 @@ class App extends Component {
       sequence = sequence.then(() => {
         return new Promise((resolve, reject) => {
 
-          // define parameters
+          // Define parameters.
           let parameters = {
             part : 'snippet',
             snippet : {
@@ -242,7 +251,7 @@ class App extends Component {
             }
           };
 
-          // execute request
+          // Execute request.
           let request = gapi.client.youtube.playlistItems.insert(parameters);
           request.execute((res) => {
             console.log(res);

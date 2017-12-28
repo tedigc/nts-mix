@@ -3,8 +3,10 @@ node_modules
 
 # client
 client/node_modules
-client/build
 
 # server
 server/config.js
 server/client_secret.json
+
+# OS
+*.DS_STORE
