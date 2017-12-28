@@ -2,9 +2,9 @@
 
 Build playlists for all of your favourite NTS mixes
 
-[NTS Radio](https://www.nts.live/)  is an online radio station based in London with studios in Los Angeles, Shanghai and Manchester. Broadcasting underground music live, 24/7.
+[NTS Radio](https://www.nts.live/) is an online radio station based in London with studios in Los Angeles, Shanghai and Manchester. Broadcasting underground music live, 24/7.
 
-NTS mix creates YouTube playlists by web scraping NTS URLs for tracklists, DJs and other information, and using Google's YouTube v3 API to search for and add individual songs. 
+NTS mix is a web application that uses Google's YouTube v3 API to create playlists from the mix tracklists found by webscraping NTS URLs.
 
 To get started:
 
