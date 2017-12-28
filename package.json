@@ -4,6 +4,7 @@
   "description": "A web application for compiling playlists for NTS radio shows",
   "main": "server/src/index.js",
   "scripts": {
+    "setup": "npm install && cd client && npm install && cd ../server && npm install",
     "start": "concurrently \"npm run server\" \"npm run client\"",
     "build": "cd client && npm run build",
     "server": "nodemon server/src/index.js --variables --exec babel-node",
