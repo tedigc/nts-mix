@@ -14,5 +14,7 @@ $ npm run setup
 $ npm start
 ```
 
+Check the [NTS mix wiki](https://github.com/tedigc/nts-mix/wiki) for more information regarding development.
+
 ---
 Author: [tedigc](https://github.com/tedigc)
