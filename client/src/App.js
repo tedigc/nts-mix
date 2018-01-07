@@ -1,9 +1,11 @@
 /* global gapi */
 
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Track from './Track';
 import './style/index.css';
+import { Transition } from 'react-transition-group';
 
 const API_KEY        =  'AIzaSyBkgrN0HMZWQzMxgkXMGw2F_ysxFUdDe9o';    // API key is restricted, so can be public.
 const CLIENT_ID      =  '859070380405-1fr4q5kqkkk460ccjianpi78kk14tqig.apps.googleusercontent.com';
@@ -12,6 +14,21 @@ const DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/youtube/v3
 const DO_NOT_DELETE  =  'PLQ3YpXF4Wmw85ntSyGtW3_b8Up02Yw66V';         // Playlist ID. doesn't really matter if this goes public.
 
 let GoogleAuth;
+
+const duration = 300;
+
+const defaultStyle = {
+  transition: `opacity ${duration}ms ease-in-out`,
+  opacity: 0,
+  padding: 20,
+  display: 'inline-block',
+  backgroundColor: '#8787d8'
+}
+
+const transitionStyles = {
+  entering: { opacity: 0 },
+  entered: { opacity: 1 },
+};
 
 class App extends Component {
 
@@ -127,22 +144,24 @@ class App extends Component {
         let { dj, description, location, date, tracklist } = result.data;
         this.setState({ mix : { dj, description, location, date, tracklist }});
 
-        console.log(result.data);
+        // Promise.all(tracklist.map((track) => {
+        //     return this.searchForTrack(track);
+        //   }))
+        //   .then((response) => {
+        //     console.log(response);
+        //     let trackIds = [];
+        //     for(let result of response) {
+        //       console.log(result);
+        //       if(result.pageInfo.totalResults > 0) {
+        //         trackIds.push(result.items[0].id.videoId);
+        //       }
+        //     }
+        //     this.createPlaylist(dj, description, location, date, trackIds);
+        //   });
 
-        Promise.all(tracklist.map((track) => {
-            return this.searchForTrack(track);
-          }))
-          .then((response) => {
-            console.log(response);
-            let trackIds = [];
-            for(let result of response) {
-              console.log(result);
-              if(result.pageInfo.totalResults > 0) {
-                trackIds.push(result.items[0].id.videoId);
-              }
-            }
-            this.createPlaylist(dj, description, location, date, trackIds);
-          });
+      })
+      .catch((error) => {
+        this.setState({ mix : { tracklist : [] } });
       });
   }
 
@@ -274,6 +293,7 @@ class App extends Component {
       let title  = track.split("-")[1].trim();
       return <Track key={key} artist={artist} title={title}/>
     });
+    console.log(tracklistComponent);
     if(tracklist.length > 0) {
       return (
         <div>
@@ -284,7 +304,7 @@ class App extends Component {
         </div>
       );
     } else {
-      return '';
+      return (<div>empty</div>);
     }
 
   }
@@ -299,6 +319,17 @@ class App extends Component {
       loginText = 'WAIT';
     }
 
+    const tracklist = this.tracklist();
+    const mycomp = (
+      <Transition
+        timeout={500}
+        classNames="fade">
+        {tracklist}
+      </Transition>
+    );
+
+    console.log(mycomp);
+
     return (
       <div className="App">
         <h1>WELCOME TO NTS MIX</h1>
@@ -310,7 +341,8 @@ class App extends Component {
 
         <button onClick={this.handleAuthClick} disabled={!gapiReady}>{loginText}</button>
         <button onClick={this.deleteAllPlaylists} disabled={!gapiReady || !isAuthorized} style={{ marginLeft: 10 }}>DELETE ALL PLAYLISTS</button>
-        
+        <Link to="/tracklist"><button style={{ marginLeft: 10}}>TRACKLIST PAGE</button></Link>
+
         <br/>
         <br/>
 
@@ -324,7 +356,7 @@ class App extends Component {
         <br/>
         <br/>
 
-        {this.tracklist()}
+        {mycomp}
 
       </div>
     );
