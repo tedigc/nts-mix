@@ -1,79 +1,94 @@
 /* global gapi */
-
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Track from './Track';
 import './style/index.css';
-import { Transition } from 'react-transition-group';
 
-const API_KEY        =  'AIzaSyBkgrN0HMZWQzMxgkXMGw2F_ysxFUdDe9o';    // API key is restricted, so can be public.
-const CLIENT_ID      =  '859070380405-1fr4q5kqkkk460ccjianpi78kk14tqig.apps.googleusercontent.com';
-const SCOPE          =  'https://www.googleapis.com/auth/youtube';
+const API_KEY = 'AIzaSyBkgrN0HMZWQzMxgkXMGw2F_ysxFUdDe9o'; // API key is restricted, so can be public.
+const CLIENT_ID = '859070380405-1fr4q5kqkkk460ccjianpi78kk14tqig.apps.googleusercontent.com';
+const SCOPE = 'https://www.googleapis.com/auth/youtube';
 const DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest'];
-const DO_NOT_DELETE  =  'PLQ3YpXF4Wmw85ntSyGtW3_b8Up02Yw66V';         // Playlist ID. doesn't really matter if this goes public.
+const DO_NOT_DELETE = 'PLQ3YpXF4Wmw85ntSyGtW3_b8Up02Yw66V'; // Playlist ID. doesn't really matter if this goes public.
 
 let GoogleAuth;
 
-const duration = 300;
-
-const defaultStyle = {
-  transition: `opacity ${duration}ms ease-in-out`,
-  opacity: 0,
-  padding: 20,
-  display: 'inline-block',
-  backgroundColor: '#8787d8'
+// Delete the YouTube playlist with the given ID.
+function deletePlaylist(playlistId) {
+  const request = gapi.client.youtube.playlists.delete({ id : playlistId });
+  request.execute((res) => {
+    console.log(res);
+  });
 }
 
-const transitionStyles = {
-  entering: { opacity: 0 },
-  entered: { opacity: 1 },
-};
+// Removes all playlists, except for my own "lectures and talks" playlist.
+function deleteAllPlaylists() {
+  const parameters = {
+    part: 'snippet',
+    mine: true,
+    maxResults: 25,
+  };
+
+  const request = gapi.client.youtube.playlists.list(parameters);
+  request.execute((res) => {
+    res.items.forEach((item) => {
+      if (item.id !== DO_NOT_DELETE) {
+        deletePlaylist(item.id);
+      }
+    });
+  });
+}
+
+// Search for a track using the YouTube API.
+function searchForTrack(track) {
+  const parameters = {
+    part      : 'snippet',
+    maxResults: 5,
+    order     : 'relevance',
+    q         : track
+  };
+  const request = gapi.client.youtube.search.list(parameters);
+  return new Promise((resolve, reject) => {
+    request.execute((res) => {
+      resolve(res);
+    });
+  });
+}
 
 class App extends Component {
-
   state = {
-    gapiReady   : false,
+    gapiReady: false,
     isAuthorized: false,
-    mix          : {
-      dj         : '',
+    mix: {
+      dj: '',
       description: '',
-      location   : '',
-      date       : '',
-      tracklist  : []
+      location: '',
+      date: '',
+      tracklist: [],
     },
-    url       : 'https://www.nts.live/shows/sun-cut/episodes/sun-cut-27th-november-2017',
+    url: 'https://www.nts.live/shows/sun-cut/episodes/sun-cut-27th-november-2017',
     playlistId: '',
-    status    : ''
+    status: '',
   };
 
   constructor(props) {
     super(props);
-    this.initClient         = this.initClient.bind(this);
-    this.handleAuthClick    = this.handleAuthClick.bind(this);
-    this.handleChange       = this.handleChange.bind(this);
-    this.findTracklist      = this.findTracklist.bind(this);
-    this.createPlaylist     = this.createPlaylist.bind(this);
-    this.deleteAllPlaylists = this.deleteAllPlaylists.bind(this);
-    this.deletePlaylist     = this.deletePlaylist.bind(this);
+    this.initClient = this.initClient.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.findTracklist = this.findTracklist.bind(this);
+    this.createPlaylist = this.createPlaylist.bind(this);
   }
 
-  /**
-   * Load the YouTube API before the component mounts.
-   */
   componentWillMount() {
     this.loadYoutubeAPI();
-  } 
+  }
 
-  /**
-   * Load YouTube API.
-   */
   loadYoutubeAPI() {
     console.log('loading youtube api');
-    const script = document.createElement("script");
-    script.src = "https://apis.google.com/js/api.js";
+    const script = document.createElement('script');
+    script.src = 'https://apis.google.com/js/api.js';
     script.onload = () => {
-      this.setState({ gapiReady : true });
+      this.setState({ gapiReady: true });
       gapi.load('client:auth2', this.initClient);
     };
     document.body.appendChild(script);
@@ -85,10 +100,10 @@ class App extends Component {
   initClient() {
     console.log('Initialising');
     gapi.client.init({
-      'apiKey'     :  API_KEY,
-      'clientId'   :  CLIENT_ID,
-      'scope'      : 'https://www.googleapis.com/auth/youtube',
-      discoveryDocs:  DISCOVERY_DOCS
+      apiKey: API_KEY,
+      clientId: CLIENT_ID,
+      scope: 'https://www.googleapis.com/auth/youtube',
+      discoveryDocs: DISCOVERY_DOCS,
       })
       .then(() => {
         console.log(gapi.auth2.getAuthInstance());
@@ -109,9 +124,6 @@ class App extends Component {
    */
   handleAuthClick(e) {
     e.preventDefault();
-
-    console.log(GoogleAuth);
-
     if(GoogleAuth.isSignedIn.get()) {
       GoogleAuth.signOut();
     } else {
@@ -119,22 +131,17 @@ class App extends Component {
     }
   }
 
-  /**
-   * Update the search text field.
-   */
+  // Update the search text field.
   handleChange(e) {
     e.preventDefault();
-    if(e.target.name === "nts-link") {
-      this.setState({ url : e.target.value });      
+    if (e.target.name === 'nts-link') {
+      this.setState({ url: e.target.value });
     }
   }
 
-  /**
-   * Search NTS for a tracklist, and create a playlist from that.
-   */
+  // Search NTS for a tracklist, and create a playlist from that.
   findTracklist(e) {
-
-    this.setState({ status : 'SEARCHING FOR TRACKLIST'});
+    this.setState({ status: 'SEARCHING FOR TRACKLIST' });
 
     e.preventDefault();
     const { url } = this.state;
@@ -145,7 +152,7 @@ class App extends Component {
         this.setState({ mix : { dj, description, location, date, tracklist }});
 
         // Promise.all(tracklist.map((track) => {
-        //     return this.searchForTrack(track);
+        //     return searchForTrack(track);
         //   }))
         //   .then((response) => {
         //     console.log(response);
@@ -158,53 +165,10 @@ class App extends Component {
         //     }
         //     this.createPlaylist(dj, description, location, date, trackIds);
         //   });
-
       })
-      .catch((error) => {
-        this.setState({ mix : { tracklist : [] } });
+      .catch(() => {
+        this.setState({ mix: { tracklist: [] } });
       });
-  }
-
-  /**
-   * Search for a track using the YouTube API.
-   */
-  searchForTrack(track) {
-    let parameters = {
-      part      : 'snippet',
-      maxResults: 5,
-      order     : 'relevance',
-      q         : track
-    };
-    let request = gapi.client.youtube.search.list(parameters);
-    return new Promise((resolve, reject) => {
-      request.execute((res) => {
-        resolve(res);
-      });
-    });
-  }
-
-  /**
-   * TODO remove this method 
-   * 
-   * Removes all playlists, except for my own "lectures and talks" playlist.
-   */
-  deleteAllPlaylists() {
-    console.log('Deleting all playlists');
-
-    let parameters = {
-      part      : 'snippet',
-      mine      : true,
-      maxResults: 25
-    };
-
-    let request = gapi.client.youtube.playlists.list(parameters);
-    request.execute((res) => {
-      for(let item of res.items) {
-        if(item.id !== DO_NOT_DELETE) {
-          this.deletePlaylist(item.id);
-        }
-      }
-    });
   }
 
   /**
@@ -212,40 +176,30 @@ class App extends Component {
    */
   createPlaylist(dj, description, location, date, trackIds) {
 
-    this.setState({ status : 'CREATING PLAYLIST'});
-    let title = `${dj} - ${location} ${date} | NTS mix`;
+    this.setState({ status: 'CREATING PLAYLIST'});
+    const title = `${dj} - ${location} ${date} | NTS mix`;
 
     // Define parameters.
-    let parameters = {
+    const parameters = {
       part: 'snippet, status',
       resource: {
         snippet: {
-          title: title,
-          description: description
+          title,
+          description,
         },
         status: {
-          privacyStatus: 'private'
-        }
-      }
+          privacyStatus: 'private',
+        },
+      },
     };
 
     // Execute request.
-    let request = gapi.client.youtube.playlists.insert(parameters);
+    const request = gapi.client.youtube.playlists.insert(parameters);
     request.execute((res) => {
-      let playlistId = res.id;
+      const playlistId = res.id;
       console.log(`Playlist Created with ID ${playlistId}`);
-      this.setState({ status : 'ADDING SONGS' });
+      this.setState({ status: 'ADDING SONGS' });
       this.addAllSongs(playlistId, trackIds);
-    });
-  }
-
-  /**
-   * Delete the YouTube playlist with the given ID.
-   */
-  deletePlaylist(playlistId) {
-    let request = gapi.client.youtube.playlists.delete({ id : playlistId });
-    request.execute((res) => {
-      console.log(res);
     });
   }
 
@@ -310,10 +264,10 @@ class App extends Component {
   }
 
   render() {
-    let { isAuthorized, status, gapiReady } = this.state;
+    const { isAuthorized, status, gapiReady } = this.state;
     
     let loginText;
-    if(gapiReady) {
+    if (gapiReady) {
       loginText = (isAuthorized) ? 'LOG OUT' : 'LOG IN';
     } else {
       loginText = 'WAIT';
@@ -340,8 +294,8 @@ class App extends Component {
         <br/>
 
         <button onClick={this.handleAuthClick} disabled={!gapiReady}>{loginText}</button>
-        <button onClick={this.deleteAllPlaylists} disabled={!gapiReady || !isAuthorized} style={{ marginLeft: 10 }}>DELETE ALL PLAYLISTS</button>
-        <Link to="/tracklist"><button style={{ marginLeft: 10}}>TRACKLIST PAGE</button></Link>
+        <button onClick={deleteAllPlaylists} disabled={!gapiReady || !isAuthorized} style={{ marginLeft: 10 }}>DELETE ALL PLAYLISTS</button>
+        <Link to="/tracklist"><button style={{ marginLeft: 10 }}>TRACKLIST PAGE</button></Link>
 
         <br/>
         <br/>
@@ -361,7 +315,6 @@ class App extends Component {
       </div>
     );
   }
-
 }
 
 export default App;
