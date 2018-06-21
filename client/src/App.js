@@ -15,7 +15,7 @@ let GoogleAuth;
 
 // Delete the YouTube playlist with the given ID.
 function deletePlaylist(playlistId) {
-  const request = gapi.client.youtube.playlists.delete({ id : playlistId });
+  const request = gapi.client.youtube.playlists.delete({ id: playlistId });
   request.execute((res) => {
     console.log(res);
   });
@@ -63,6 +63,57 @@ function handleAuthClick(e) {
   } else {
     GoogleAuth.signIn();
   }
+}
+
+// Given an array of YouTube video IDs, add those videos to the playlist with the specified ID.
+function addAllSongs(playlistId, trackIds) {
+  let sequence = Promise.resolve();
+  trackIds.forEach((id) => {
+    sequence = sequence.then(() =>
+      new Promise((resolve) => {
+        const parameters = {
+          part: 'snippet',
+          snippet: {
+            playlistId,
+            resourceId: {
+              kind: 'youtube#video',
+              videoId: id,
+            },
+          },
+        };
+
+        const request = gapi.client.youtube.playlistItems.insert(parameters);
+        request.execute((res) => {
+          console.log(res);
+          console.log(`Added song successfully : ${res.snippet.title}`);
+          resolve();
+        });
+      }));
+
+    // sequence = sequence.then(() => {
+    //   return new Promise((resolve) => {
+    //     // Define parameters.
+    //     const parameters = {
+    //       part: 'snippet',
+    //       snippet: {
+    //         playlistId,
+    //         resourceId: {
+    //           kind: 'youtube#video',
+    //           videoId: id,
+    //         },
+    //       },
+    //     };
+
+    //     // Execute request.
+    //     const request = gapi.client.youtube.playlistItems.insert(parameters);
+    //     request.execute((res) => {
+    //       console.log(res);
+    //       console.log(`Added song successfully : ${res.snippet.title}`);
+    //       resolve();
+    //     });
+    //   });
+    // });
+  });
 }
 
 class App extends Component {
@@ -119,7 +170,7 @@ class App extends Component {
         console.log(gapi.auth2.getAuthInstance());
         GoogleAuth = gapi.auth2.getAuthInstance();
         GoogleAuth.isSignedIn.listen((isAuthorized) => { this.setState({ isAuthorized }); });
-    
+
         const user = GoogleAuth.currentUser.get();
         const isAuthorized = user.hasGrantedScopes(SCOPE);
         this.setState({ isAuthorized });
@@ -170,8 +221,7 @@ class App extends Component {
 
   // Create a brand new playlist, and fill it with a collection of tracks based on IDs.
   createPlaylist(dj, description, location, date, trackIds) {
-
-    this.setState({ status: 'CREATING PLAYLIST'});
+    this.setState({ status: 'CREATING PLAYLIST' });
     const title = `${dj} - ${location} ${date} | NTS mix`;
 
     // Define parameters.
@@ -182,9 +232,7 @@ class App extends Component {
           title,
           description,
         },
-        status: {
-          privacyStatus: 'private',
-        },
+        status: { privacyStatus: 'private' },
       },
     };
 
@@ -194,56 +242,22 @@ class App extends Component {
       const playlistId = res.id;
       console.log(`Playlist Created with ID ${playlistId}`);
       this.setState({ status: 'ADDING SONGS' });
-      this.addAllSongs(playlistId, trackIds);
+      addAllSongs(playlistId, trackIds);
     });
-  }
-
-  /**
-   * Given an array of YouTube video IDs, add those videos to the playlist with the specified ID.
-   */
-  addAllSongs(playlistId, trackIds) {
-    let sequence = Promise.resolve();
-    for(let id of trackIds) {
-      sequence = sequence.then(() => {
-        return new Promise((resolve, reject) => {
-
-          // Define parameters.
-          let parameters = {
-            part : 'snippet',
-            snippet : {
-              playlistId : playlistId,
-              resourceId : {
-                kind : 'youtube#video',
-                videoId: id
-              }
-            }
-          };
-
-          // Execute request.
-          let request = gapi.client.youtube.playlistItems.insert(parameters);
-          request.execute((res) => {
-            console.log(res);
-            console.log('added song successfully : ' + res.snippet.title);
-            resolve();
-          });
-
-        });
-      });
-    }
   }
 
   /**
    * Returns a list of track components.
    */
   tracklist() {
-    let { dj, description, tracklist } = this.state.mix;
-    let tracklistComponent = tracklist.map((track, key) => {
-      let artist = track.split("-")[0].trim();
-      let title  = track.split("-")[1].trim();
-      return <Track key={key} artist={artist} title={title}/>
+    const { dj, description, tracklist } = this.state.mix;
+    const tracklistComponent = tracklist.map((track, key) => {
+      const artist = track.split('-')[0].trim();
+      const title = track.split('-')[1].trim();
+      return <Track key={key} artist={artist} title={title}/>;
     });
     console.log(tracklistComponent);
-    if(tracklist.length > 0) {
+    if (tracklist.length > 0) {
       return (
         <div>
           <h1>{dj.toUpperCase()}</h1>
@@ -263,14 +277,14 @@ class App extends Component {
     if (gapiReady) loginText = (isAuthorized) ? 'LOG OUT' : 'LOG IN';
     else loginText = 'WAIT';
 
-    const tracklist = this.tracklist();
-    const mycomp = (
-      <Transition
-        timeout={500}
-        classNames="fade">
-        {tracklist}
-      </Transition>
-    );
+    // const tracklist = this.tracklist();
+    // const mycomp = (
+    //   <Transition
+    //     timeout={500}
+    //     classNames="fade">
+    //     {tracklist}
+    //   </Transition>
+    // );
 
     return (
       <div className="App">
@@ -282,7 +296,12 @@ class App extends Component {
         <br/>
 
         <button onClick={() => handleAuthClick() } disabled={!gapiReady}>{loginText}</button>
-        <button onClick={() => deleteAllPlaylists() } disabled={!gapiReady || !isAuthorized} style={{ marginLeft: 10 }}>DELETE ALL PLAYLISTS</button>
+        <button
+          onClick={() => deleteAllPlaylists() }
+          disabled={!gapiReady || !isAuthorized}
+          style={{ marginLeft: 10 }}>
+          DELETE ALL PLAYLISTS
+        </button>
         <Link to="/tracklist"><button style={{ marginLeft: 10 }}>TRACKLIST PAGE</button></Link>
 
         <br/>
@@ -297,8 +316,6 @@ class App extends Component {
         <br/>
         <br/>
         <br/>
-
-        {mycomp}
 
       </div>
     );
