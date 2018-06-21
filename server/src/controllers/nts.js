@@ -49,13 +49,7 @@ router.post('/tracklist', (req, res) => {
       }
 
       // Send results to the client.
-      res.json({
-        dj,
-        description,
-        location,
-        date,
-        tracklist,
-      });
+      res.json({ dj, description, location, date, tracklist });
     }
   });
 });

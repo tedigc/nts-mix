@@ -42,17 +42,27 @@ function deleteAllPlaylists() {
 // Search for a track using the YouTube API.
 function searchForTrack(track) {
   const parameters = {
-    part      : 'snippet',
+    part: 'snippet',
     maxResults: 5,
-    order     : 'relevance',
-    q         : track
+    order: 'relevance',
+    q: track,
   };
   const request = gapi.client.youtube.search.list(parameters);
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     request.execute((res) => {
       resolve(res);
     });
   });
+}
+
+// Log in or out.
+function handleAuthClick(e) {
+  e.preventDefault();
+  if (GoogleAuth.isSignedIn.get()) {
+    GoogleAuth.signOut();
+  } else {
+    GoogleAuth.signIn();
+  }
 }
 
 class App extends Component {
@@ -104,31 +114,19 @@ class App extends Component {
       clientId: CLIENT_ID,
       scope: 'https://www.googleapis.com/auth/youtube',
       discoveryDocs: DISCOVERY_DOCS,
-      })
+    })
       .then(() => {
         console.log(gapi.auth2.getAuthInstance());
         GoogleAuth = gapi.auth2.getAuthInstance();
         GoogleAuth.isSignedIn.listen((isAuthorized) => { this.setState({ isAuthorized }); });
     
-        let user = GoogleAuth.currentUser.get();
-        let isAuthorized = user.hasGrantedScopes(SCOPE);
+        const user = GoogleAuth.currentUser.get();
+        const isAuthorized = user.hasGrantedScopes(SCOPE);
         this.setState({ isAuthorized });
       })
       .catch((error) => {
         console.log(error);
       });
-  }
-
-  /**
-   * Log in or out.
-   */
-  handleAuthClick(e) {
-    e.preventDefault();
-    if(GoogleAuth.isSignedIn.get()) {
-      GoogleAuth.signOut();
-    } else {
-      GoogleAuth.signIn();
-    }
   }
 
   // Update the search text field.
@@ -147,9 +145,8 @@ class App extends Component {
     const { url } = this.state;
     axios.post('/api/nts/tracklist', { url })
       .then((result) => {
-
-        let { dj, description, location, date, tracklist } = result.data;
-        this.setState({ mix : { dj, description, location, date, tracklist }});
+        const { dj, description, location, date, tracklist } = result.data;
+        this.setState({ mix: { dj, description, location, date, tracklist } });
 
         // Promise.all(tracklist.map((track) => {
         //     return searchForTrack(track);
@@ -171,9 +168,7 @@ class App extends Component {
       });
   }
 
-  /**
-   * Create a brand new playlist, and fill it with a collection of tracks based on IDs.
-   */
+  // Create a brand new playlist, and fill it with a collection of tracks based on IDs.
   createPlaylist(dj, description, location, date, trackIds) {
 
     this.setState({ status: 'CREATING PLAYLIST'});
@@ -257,21 +252,16 @@ class App extends Component {
           {tracklistComponent}
         </div>
       );
-    } else {
-      return (<div>empty</div>);
     }
-
+    return (<div>empty</div>);
   }
 
   render() {
     const { isAuthorized, status, gapiReady } = this.state;
-    
+
     let loginText;
-    if (gapiReady) {
-      loginText = (isAuthorized) ? 'LOG OUT' : 'LOG IN';
-    } else {
-      loginText = 'WAIT';
-    }
+    if (gapiReady) loginText = (isAuthorized) ? 'LOG OUT' : 'LOG IN';
+    else loginText = 'WAIT';
 
     const tracklist = this.tracklist();
     const mycomp = (
@@ -282,8 +272,6 @@ class App extends Component {
       </Transition>
     );
 
-    console.log(mycomp);
-
     return (
       <div className="App">
         <h1>WELCOME TO NTS MIX</h1>
@@ -293,8 +281,8 @@ class App extends Component {
         <br/>
         <br/>
 
-        <button onClick={this.handleAuthClick} disabled={!gapiReady}>{loginText}</button>
-        <button onClick={deleteAllPlaylists} disabled={!gapiReady || !isAuthorized} style={{ marginLeft: 10 }}>DELETE ALL PLAYLISTS</button>
+        <button onClick={() => handleAuthClick() } disabled={!gapiReady}>{loginText}</button>
+        <button onClick={() => deleteAllPlaylists() } disabled={!gapiReady || !isAuthorized} style={{ marginLeft: 10 }}>DELETE ALL PLAYLISTS</button>
         <Link to="/tracklist"><button style={{ marginLeft: 10 }}>TRACKLIST PAGE</button></Link>
 
         <br/>
