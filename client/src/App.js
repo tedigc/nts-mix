@@ -89,30 +89,6 @@ function addAllSongs(playlistId, trackIds) {
           resolve();
         });
       }));
-
-    // sequence = sequence.then(() => {
-    //   return new Promise((resolve) => {
-    //     // Define parameters.
-    //     const parameters = {
-    //       part: 'snippet',
-    //       snippet: {
-    //         playlistId,
-    //         resourceId: {
-    //           kind: 'youtube#video',
-    //           videoId: id,
-    //         },
-    //       },
-    //     };
-
-    //     // Execute request.
-    //     const request = gapi.client.youtube.playlistItems.insert(parameters);
-    //     request.execute((res) => {
-    //       console.log(res);
-    //       console.log(`Added song successfully : ${res.snippet.title}`);
-    //       resolve();
-    //     });
-    //   });
-    // });
   });
 }
 
@@ -155,9 +131,7 @@ class App extends Component {
     document.body.appendChild(script);
   }
 
-  /**
-   * Initialise GAPI client and check the user's sign in status.
-   */
+  // Initialise GAPI client and check the user's sign in status.
   initClient() {
     console.log('Initialising');
     gapi.client.init({
@@ -246,9 +220,7 @@ class App extends Component {
     });
   }
 
-  /**
-   * Returns a list of track components.
-   */
+  // Returns a list of track components.
   tracklist() {
     const { dj, description, tracklist } = this.state.mix;
     const tracklistComponent = tracklist.map((track, key) => {

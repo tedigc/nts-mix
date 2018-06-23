@@ -11,48 +11,26 @@ router.post('/tracklist', (req, res) => {
   request.get(req.body.url, (err, response, body) => {
     if (err) {
       console.log('error');
+      console.log(err);
       res.status(500).json(err);
     } else {
-      // Load the html.
+      // Scrape html for mix details
       const $ = cheerio.load(body);
 
-      // Get the DJ name.
-      const djElement = $('h1[class=text-bold]');
-      const dj = djElement['0'].children[0].data;
+      // Read dj, description, and location/date
+      const dj = $('.bio__title div h1.text-bold').text().trim();
+      const description = $('div.description h3').text().trim();
+      const locationDate = $('div.bio__title__subtitle').text().trim();
 
-      // Get the description.
-      const descriptionElement = $('div[class=description]');
-      const description = descriptionElement['0'].children[1].children[0].data;
-
-      // // Get the location.
-      // const locationDateElement = $('div[class=bio__title__subtitle]');
-      // console.log(locationDateElement);
-      // const location = locationDateElement['0'].children[1].children[0].data;
-
-      // // Get the date.
-      // const date = locationDateElement['0'].children[3].children[0].data;
-
-      // Get the list of tracks.
-      const tracklistElement = $('li[class=show]');
-      // console.log(tracklistElement);
-      // const tracklist = Object.values(tracklistElement).map((obj) => {
-      //   if (this.hasOwnProperty('attribs') && obj.attribs.class === 'show') {
-      //     return obj.children[0].data;
-      //   }
-      // });
-
-      let tracklist = [];
-      for (let key of Object.keys(tracklistElement)) {
-        console.log(tracklistElement[key]);
-        if(tracklistElement[key].hasOwnProperty('attribs') && tracklistElement[key].attribs.class === 'show') {
-          tracklist.push(tracklistElement[key].children[0].data);
-        }
-      }
-      console.log(tracklist);
+      // Scrape track details
+      const tracklist = $('ul.shows.tracks li').map((id, track) => {
+        const artist = $(track).find('span.track__artist').text().trim();
+        const title = $(track).find('span.track__title').text().trim();
+        return { artist, title };
+      }).get();
 
       // Send results to the client.
-      res.json({ dj, description, tracklist });
-      // res.json({ dj, description, location, date, tracklist });
+      res.json({ dj, description, locationDate, tracklist });
     }
   });
 });
