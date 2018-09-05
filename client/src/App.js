@@ -56,8 +56,7 @@ function searchForTrack(track) {
 }
 
 // Log in or out.
-function handleAuthClick(e) {
-  e.preventDefault();
+function handleAuthClick() {
   if (GoogleAuth.isSignedIn.get()) {
     GoogleAuth.signOut();
   } else {
@@ -96,6 +95,7 @@ class App extends Component {
   state = {
     gapiReady: false,
     isAuthorized: false,
+    searching: false,
     mix: {
       dj: '',
       description: '',
@@ -105,7 +105,6 @@ class App extends Component {
     },
     url: 'https://www.nts.live/shows/sun-cut/episodes/sun-cut-27th-november-2017',
     playlistId: '',
-    status: '',
   };
 
   constructor(props) {
@@ -164,14 +163,14 @@ class App extends Component {
 
   // Search NTS for a tracklist, and create a playlist from that.
   findTracklist(e) {
-    this.setState({ status: 'SEARCHING FOR TRACKLIST' });
+    this.setState({ searching: true });
 
     e.preventDefault();
     const { url } = this.state;
     axios.post('/api/nts/tracklist', { url })
       .then((result) => {
         const { dj, description, location, date, tracklist } = result.data;
-        this.setState({ mix: { dj, description, location, date, tracklist } });
+        this.setState({ mix: { dj, description, location, date, tracklist }, searching: false });
 
         // Promise.all(tracklist.map((track) => {
         //     return searchForTrack(track);
@@ -239,8 +238,24 @@ class App extends Component {
     return (<div></div>);
   }
 
+  searchButton() {
+    const { isAuthorized, gapiReady } = this.state;
+    if (this.state.searching) {
+      return (
+        <button value={this.state.url} disabled={!gapiReady || !isAuthorized}>
+          <i class="fas fa-spinner spinner"></i>
+        </button>
+      );
+    }
+    return (
+      <button value={this.state.url} disabled={!gapiReady || !isAuthorized}>
+        <i className="fas fa-search"></i>
+      </button>
+    );
+  }
+
   render() {
-    const { isAuthorized, status, gapiReady } = this.state;
+    const { isAuthorized, gapiReady } = this.state;
 
     let loginText;
     if (gapiReady) loginText = (isAuthorized) ? 'LOG OUT' : 'LOG IN';
@@ -253,34 +268,34 @@ class App extends Component {
         <div className="content">
           <h1>WELCOME TO NTS MIX</h1>
 
-          <span>{status}</span>
-
-          <br/>
-          <br/>
-
-          {/* NTS Track List Search */}
+          {/* NTS Search Form */}
           <form onSubmit={this.findTracklist}>
-            <input type="text" name="nts-link" value={this.state.url} disabled={!gapiReady || !isAuthorized} onChange={this.handleChange}/>
-            <button value={this.state.url} disabled={!gapiReady || !isAuthorized}>SEARCH NTS</button>
+            <button className="search-button" value={this.state.url} disabled={!gapiReady || !isAuthorized}>
+              <i className="fas fa-search"></i>
+            </button>
+            <div className="search-wrapper">
+              <input type="text" name="nts-link" value={this.state.url} disabled={!gapiReady || !isAuthorized} onChange={this.handleChange}/>
+            </div>
           </form>
 
           <br/>
           <br/>
-          <br/>
 
           {tracklist}
+
         </div>
 
         {/* Control panel */}
         <div className="control-panel">
-          <button onClick={() => handleAuthClick() } disabled={!gapiReady}>{loginText}</button>
+          <button className="outline" onClick={() => handleAuthClick() } disabled={!gapiReady}>{loginText}</button>
           <button
+            className="outline"
             onClick={() => deleteAllPlaylists() }
             disabled={!gapiReady || !isAuthorized}
             style={{ marginLeft: 10 }}>
             DELETE ALL PLAYLISTS
           </button>
-          <Link to="/tracklist"><button style={{ marginLeft: 10 }}>TRACKLIST PAGE</button></Link>
+          <Link to="/tracklist"><button className="outline" style={{ marginLeft: 10 }}>TRACKLIST PAGE</button></Link>
         </div>
 
       </div>
