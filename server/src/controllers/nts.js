@@ -9,41 +9,28 @@ let router = express.Router();
  */ 
 router.post('/tracklist', (req, res) => {
   request.get(req.body.url, (err, response, body) => {
-    if(err) {
-      console.log("error");
+    if (err) {
+      console.log('error');
+      console.log(err);
       res.status(500).json(err);
     } else {
-
-      // Load the html.
+      // Scrape html for mix details
       const $ = cheerio.load(body);
 
-      // Get the DJ name.
-      let djElement = $('h1[class=text-bold]');
-      let dj = djElement['0'].children[0].data;
+      // Read dj, description, and location/date
+      const dj = $('.bio__title div h1.text-bold').text().trim();
+      const description = $('div.description h3').text().trim();
+      const locationDate = $('div.bio__title__subtitle').text().trim();
 
-      // Get the description.
-      let descriptionElement = $('div[class=description]');
-      let description = descriptionElement['0'].children[1].children[0].data;
-
-      // Get the location.
-      let locationDateElement = $('div[class=bio__title__subtitle]');
-      let location = locationDateElement['0'].children[1].children[0].data;
-
-      // Get the date.
-      let date = locationDateElement['0'].children[3].children[0].data;
-
-      // Get the list of tracks.
-      let tracklistElement = $('li[class=show]');
-      let tracklist = [];
-      for(let key of Object.keys(tracklistElement)) {
-        if(tracklistElement[key].hasOwnProperty('attribs') && tracklistElement[key].attribs.class === 'show') {
-          tracklist.push(tracklistElement[key].children[0].data);
-        }
-      }
+      // Scrape track details
+      const tracklist = $('ul.shows.tracks li').map((id, track) => {
+        const artist = $(track).find('span.track__artist').text().trim();
+        const title = $(track).find('span.track__title').text().trim();
+        return { artist, title };
+      }).get();
 
       // Send results to the client.
-      res.json({ dj, description, location, date, tracklist });
-
+      res.json({ dj, description, locationDate, tracklist });
     }
   });
 });
