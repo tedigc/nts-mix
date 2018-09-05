@@ -18,6 +18,7 @@ body {
     color           : #FFFFFF;
     height: 100%;
     background: url("./images/background.jpeg") no-repeat center center fixed;
+    background-size: cover;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;

@@ -1,6 +1,5 @@
 /* global gapi */
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Track from './Track';
 import './style/index.css';
@@ -40,20 +39,20 @@ function deleteAllPlaylists() {
 }
 
 // Search for a track using the YouTube API.
-function searchForTrack(track) {
-  const parameters = {
-    part: 'snippet',
-    maxResults: 5,
-    order: 'relevance',
-    q: track,
-  };
-  const request = gapi.client.youtube.search.list(parameters);
-  return new Promise((resolve) => {
-    request.execute((res) => {
-      resolve(res);
-    });
-  });
-}
+// function searchForTrack(track) {
+//   const parameters = {
+//     part: 'snippet',
+//     maxResults: 5,
+//     order: 'relevance',
+//     q: track,
+//   };
+//   const request = gapi.client.youtube.search.list(parameters);
+//   return new Promise((resolve) => {
+//     request.execute((res) => {
+//       resolve(res);
+//     });
+//   });
+// }
 
 // Log in or out.
 function handleAuthClick() {
@@ -222,9 +221,9 @@ class App extends Component {
   // Returns a list of track components.
   tracklist() {
     const { dj, description, tracklist } = this.state.mix;
-    const tracklistComponent = tracklist.map((track, key) => {
-      return <Track key={key} artist={track.artist} title={track.title}/>;
-    });
+    const tracklistComponent = tracklist.map((track, key) =>
+      <Track key={key} artist={track.artist} title={track.title}/>);
+
     if (tracklist.length > 0) {
       return (
         <div className="mix-box">
@@ -238,11 +237,12 @@ class App extends Component {
     return (<div></div>);
   }
 
+  // Returns a context-sensitive search button
   searchButton() {
     const { isAuthorized, gapiReady } = this.state;
     if (this.state.searching) {
       return (
-        <button className="search-button" value={this.state.url} disabled={!gapiReady || !isAuthorized}>
+        <button className="search-button" value={this.state.url} disabled={true}>
           <i class="fas fa-spinner spinner"></i>
         </button>
       );
