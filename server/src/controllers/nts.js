@@ -10,8 +10,6 @@ const router = express.Router();
 router.post('/tracklist', (req, res) => {
   request.get(req.body.url, (err, response, body) => {
     if (err) {
-      console.log('error');
-      console.err(err);
       res.status(500).json(err);
     } else {
       // Scrape html for mix details
@@ -22,10 +20,16 @@ router.post('/tracklist', (req, res) => {
       const description = $('div.description h3').text().trim();
       const locationDate = $('div.bio__title__subtitle').text().trim();
 
+      // Handle invalid mix
+      if(dj.length === 0) {
+        res.status(404).json({ message: "We couldn't find an NTS mix at that URL." });
+        return;
+      }
+
       // Scrape track details
       const tracklist = $('ul.shows.tracks li').map((id, track) => {
         const artist = $(track).find('span.track__artist').text().trim();
-        const title = $(track).find('span.track__title').text().trim();
+        const title  = $(track).find('span.track__title').text().trim();
         return { artist, title };
       }).get();
 

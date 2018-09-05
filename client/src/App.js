@@ -94,6 +94,7 @@ class App extends Component {
   state = {
     gapiReady: false,
     isAuthorized: false,
+    error: '',
     searching: false,
     mix: {
       dj: '',
@@ -119,7 +120,6 @@ class App extends Component {
   }
 
   loadYoutubeAPI() {
-    console.log('Loading YouTube API');
     const script = document.createElement('script');
     script.src = 'https://apis.google.com/js/api.js';
     script.onload = () => {
@@ -131,7 +131,6 @@ class App extends Component {
 
   // Initialise GAPI client and check the user's sign in status.
   initClient() {
-    console.log('Initialising');
     gapi.client.init({
       apiKey: API_KEY,
       clientId: CLIENT_ID,
@@ -139,7 +138,6 @@ class App extends Component {
       discoveryDocs: DISCOVERY_DOCS,
     })
       .then(() => {
-        console.log(gapi.auth2.getAuthInstance());
         GoogleAuth = gapi.auth2.getAuthInstance();
         GoogleAuth.isSignedIn.listen((isAuthorized) => { this.setState({ isAuthorized }); });
 
@@ -168,8 +166,7 @@ class App extends Component {
     const { url } = this.state;
     axios.post('/api/nts/tracklist', { url })
       .then((result) => {
-        const { dj, description, location, date, tracklist } = result.data;
-        this.setState({ mix: { dj, description, location, date, tracklist }, searching: false });
+        this.setState({ mix: result.data, searching: false });
 
         // Promise.all(tracklist.map((track) => {
         //     return searchForTrack(track);
@@ -186,8 +183,8 @@ class App extends Component {
         //     this.createPlaylist(dj, description, location, date, trackIds);
         //   });
       })
-      .catch(() => {
-        this.setState({ mix: { tracklist: [] } });
+      .catch((err) => {
+        this.setState({ error: err.response.data.message, searching: false });
       });
   }
 
@@ -212,7 +209,6 @@ class App extends Component {
     const request = gapi.client.youtube.playlists.insert(parameters);
     request.execute((res) => {
       const playlistId = res.id;
-      console.log(`Playlist Created with ID ${playlistId}`);
       this.setState({ status: 'ADDING SONGS' });
       addAllSongs(playlistId, trackIds);
     });
@@ -237,13 +233,27 @@ class App extends Component {
     return (<div></div>);
   }
 
+  error() {
+    return (
+      <div className="mix-box">
+        {this.state.error}
+      </div>
+    );
+  }
+
+  content() {
+    const { error } = this.state;
+    if (error) return this.error();
+    return this.tracklist();
+  }
+
   // Returns a context-sensitive search button
   searchButton() {
     const { isAuthorized, gapiReady } = this.state;
     if (this.state.searching) {
       return (
         <button className="search-button" value={this.state.url} disabled={true}>
-          <i class="fas fa-spinner spinner"></i>
+          <i className="fas fa-spinner spinner"></i>
         </button>
       );
     }
@@ -255,7 +265,7 @@ class App extends Component {
   }
 
   render() {
-    const { isAuthorized, gapiReady } = this.state;
+    const { isAuthorized, gapiReady, searching } = this.state;
 
     let loginText;
     if (gapiReady) loginText = (isAuthorized) ? 'LOG OUT' : 'LOG IN';
@@ -270,14 +280,14 @@ class App extends Component {
           <form onSubmit={this.findTracklist}>
             {this.searchButton()}
             <div className="search-wrapper">
-              <input type="text" name="nts-link" value={this.state.url} disabled={!gapiReady || !isAuthorized} onChange={this.handleChange}/>
+              <input type="text" name="nts-link" value={this.state.url} disabled={!gapiReady || !isAuthorized || searching} onChange={this.handleChange}/>
             </div>
           </form>
           <br/>
         </div>
 
-        {/* Tracklist */}
-        {this.tracklist()}
+        {/* Tracklist or error message */}
+        {this.content()}
 
         {/* Control panel */}
         <div className="control-panel">
