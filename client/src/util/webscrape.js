@@ -1,35 +1,34 @@
 import cheerio from 'cheerio';
 import request from 'request';
 
-let fetchWebPage = function(url) {
-  request.get(req.body.url, (err, response, body) => {
-    if(err) {
-      console.log("error");
+function fetchWebPage(url) {
+  request.get(url, (err, response, body) => {
+    if (err) {
+      console.log('error');
     } else {
-      
+      console.log(body);
     }
   });
 }
 
-let scrapeHTML = function(html) {
-
+function scrapeHTML(html) {
   // load the html
   const $ = cheerio.load(html);
 
   // get the DJ name
-  let djElement = $('h1[class=text-bold]');
-  let dj = djElement['0'].children[0].data;
+  const djElement = $('h1[class=text-bold]');
+  const dj = djElement['0'].children[0].data;
 
   // get the description
-  let descriptionElement = $('div[class=description]');
-  let description = descriptionElement['0'].children[1].children[0].data;
+  const descriptionElement = $('div[class=description]');
+  const description = descriptionElement['0'].children[1].children[0].data;
 
   // get the location
-  let locationDateElement = $('div[class=bio__title__subtitle]');
-  let location = locationDateElement['0'].children[1].children[0].data;
+  const locationDateElement = $('div[class=bio__title__subtitle]');
+  const location = locationDateElement['0'].children[1].children[0].data;
 
   // get the date
-  let date = locationDateElement['0'].children[3].children[0].data;
+  const date = locationDateElement['0'].children[3].children[0].data;
 
   // get the list of tracks
   let tracklistElement = $('li[class=show]');

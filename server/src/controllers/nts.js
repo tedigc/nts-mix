@@ -2,16 +2,16 @@ import express from 'express';
 import request from 'request';
 import cheerio from 'cheerio';
 
-let router = express.Router();
+const router = express.Router();
 
 /**
  * Submit a URL for an NTS show, and webscrape to find the tracklist.
- */ 
+ */
 router.post('/tracklist', (req, res) => {
   request.get(req.body.url, (err, response, body) => {
     if (err) {
       console.log('error');
-      console.log(err);
+      console.err(err);
       res.status(500).json(err);
     } else {
       // Scrape html for mix details

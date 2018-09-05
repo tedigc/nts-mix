@@ -10,8 +10,34 @@
 body {
     background-color: #000000;
     color           : #FFFFFF;
-    margin-top : 40px;
-    margin-left: 40px;
+    height: 100%;
+    background-image: url("./images/background.jpeg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+}
+
+.content {
+    background-color: #000000;
+    width : 800px;
+    height: auto;
+    border: 1px solid white;
+    padding: 20px;
+    margin: auto;
+    margin-top: 120px;
+}
+
+.overlay {
+    z-index: 1;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    overflow: auto;
+    top: 0px;
+    left: 0px;
+    background: rgba(0, 0, 0, 0.5);
 }
 
 input {
@@ -21,12 +47,23 @@ input {
     width : 500px;
     height: 26px;
     border: 1px solid white;
-    margin-right: 10px;
+    padding-left: 10px;
+}
+
+.control-panel {
+    position: fixed;
+    position: 100,100;
+    outline-color   : #FFFFFF;
+    color           : #FFFFFF;
+    background-color: #000000;
+    border: 1px solid white;
+    padding: 20px;
+    bottom: 20px;
+    left: 20px;
 }
 
 form {
     margin: auto;
-    width : 50%;
 }
 
 input:disabled {
@@ -37,7 +74,7 @@ input:disabled {
 button {
     background-color: #000000;
     color           : #FFFFFF;
-    width : 180px;
+    width : 120px;
     height: 30px;
     border: 1px solid white;
     transition: all .25s ease 0s;
