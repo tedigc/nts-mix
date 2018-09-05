@@ -227,7 +227,7 @@ class App extends Component {
     });
     if (tracklist.length > 0) {
       return (
-        <div>
+        <div className="mix-box">
           <h1>{dj.toUpperCase()}</h1>
           <p>{description}</p>
           <hr/>
@@ -242,13 +242,13 @@ class App extends Component {
     const { isAuthorized, gapiReady } = this.state;
     if (this.state.searching) {
       return (
-        <button value={this.state.url} disabled={!gapiReady || !isAuthorized}>
+        <button className="search-button" value={this.state.url} disabled={!gapiReady || !isAuthorized}>
           <i class="fas fa-spinner spinner"></i>
         </button>
       );
     }
     return (
-      <button value={this.state.url} disabled={!gapiReady || !isAuthorized}>
+      <button className="search-button" value={this.state.url} disabled={!gapiReady || !isAuthorized}>
         <i className="fas fa-search"></i>
       </button>
     );
@@ -261,29 +261,23 @@ class App extends Component {
     if (gapiReady) loginText = (isAuthorized) ? 'LOG OUT' : 'LOG IN';
     else loginText = 'WAIT';
 
-    const tracklist = this.tracklist();
-
     return (
       <div className="overlay">
+
+        {/* NTS Search Form */}
         <div className="content">
           <h1>WELCOME TO NTS MIX</h1>
-
-          {/* NTS Search Form */}
           <form onSubmit={this.findTracklist}>
-            <button className="search-button" value={this.state.url} disabled={!gapiReady || !isAuthorized}>
-              <i className="fas fa-search"></i>
-            </button>
+            {this.searchButton()}
             <div className="search-wrapper">
               <input type="text" name="nts-link" value={this.state.url} disabled={!gapiReady || !isAuthorized} onChange={this.handleChange}/>
             </div>
           </form>
-
           <br/>
-          <br/>
-
-          {tracklist}
-
         </div>
+
+        {/* Tracklist */}
+        {this.tracklist()}
 
         {/* Control panel */}
         <div className="control-panel">
@@ -295,7 +289,6 @@ class App extends Component {
             style={{ marginLeft: 10 }}>
             DELETE ALL PLAYLISTS
           </button>
-          <Link to="/tracklist"><button className="outline" style={{ marginLeft: 10 }}>TRACKLIST PAGE</button></Link>
         </div>
 
       </div>
