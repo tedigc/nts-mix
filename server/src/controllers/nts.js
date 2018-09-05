@@ -8,8 +8,15 @@ const router = express.Router();
  * Submit a URL for an NTS show, and webscrape to find the tracklist.
  */
 router.post('/tracklist', (req, res) => {
+  // Check the URL to search isn't empty
+  if(req.body.url.length === 0) {
+    res.status(400).json({ message: "Paste the URL of an NTS mix in the search box above." });
+    return;
+  }
+  // Scrape the HTML from the URL
   request.get(req.body.url, (err, response, body) => {
     if (err) {
+      console.error(err);
       res.status(500).json(err);
     } else {
       // Scrape html for mix details

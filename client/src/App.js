@@ -103,7 +103,8 @@ class App extends Component {
       date: '',
       tracklist: [],
     },
-    url: 'https://www.nts.live/shows/sun-cut/episodes/sun-cut-27th-november-2017',
+    url: '',
+    // url: 'https://www.nts.live/shows/sun-cut/episodes/sun-cut-27th-november-2017',
     playlistId: '',
   };
 
@@ -160,13 +161,13 @@ class App extends Component {
 
   // Search NTS for a tracklist, and create a playlist from that.
   findTracklist(e) {
-    this.setState({ searching: true });
-
     e.preventDefault();
+    this.setState({ searching: true });
     const { url } = this.state;
+    console.log(url);
     axios.post('/api/nts/tracklist', { url })
       .then((result) => {
-        this.setState({ mix: result.data, searching: false });
+        this.setState({ mix: result.data, error: '', searching: false });
 
         // Promise.all(tracklist.map((track) => {
         //     return searchForTrack(track);
@@ -184,7 +185,7 @@ class App extends Component {
         //   });
       })
       .catch((err) => {
-        this.setState({ error: err.response.data.message, searching: false });
+        this.setState({ error: err.response.data.message, mix: {}, searching: false });
       });
   }
 
@@ -271,6 +272,8 @@ class App extends Component {
     if (gapiReady) loginText = (isAuthorized) ? 'LOG OUT' : 'LOG IN';
     else loginText = 'WAIT';
 
+    const placeholderText = (isAuthorized) ? 'Paste an NTS mix URL here...' : 'Please log in to continue';
+
     return (
       <div className="overlay">
 
@@ -280,7 +283,7 @@ class App extends Component {
           <form onSubmit={this.findTracklist}>
             {this.searchButton()}
             <div className="search-wrapper">
-              <input type="text" name="nts-link" value={this.state.url} disabled={!gapiReady || !isAuthorized || searching} onChange={this.handleChange}/>
+              <input type="text" name="nts-link" value={this.state.url} placeholder={placeholderText} disabled={!gapiReady || !isAuthorized || searching} onChange={this.handleChange}/>
             </div>
           </form>
           <br/>
