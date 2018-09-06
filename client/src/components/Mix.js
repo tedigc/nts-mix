@@ -28,7 +28,8 @@ class Mix extends Component {
       })
       .catch((error) => {
         if (error.code === 403) {
-          console.error('You\'re doing that too much.');
+          this.props.updateError('You\'ve reached your daily playlist limit. You can create a maximum of 10 playlists per day, due to Google\'s polcy regarding playlist creation through their YouTube API.');
+          // console.error('You\'re doing that too much.');
         }
       });
   }
