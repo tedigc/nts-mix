@@ -1,7 +1,7 @@
 /* global gapi */
 import React, { Component } from 'react';
-import axios from 'axios';
-import Track from './Track';
+import SearchForm from './components/SearchForm';
+import Mix from './components/Mix';
 import './style/index.css';
 
 const API_KEY = 'AIzaSyBkgrN0HMZWQzMxgkXMGw2F_ysxFUdDe9o'; // API key is restricted, so can be public.
@@ -64,63 +64,75 @@ function handleAuthClick() {
 }
 
 // Given an array of YouTube video IDs, add those videos to the playlist with the specified ID.
-function addAllSongs(playlistId, trackIds) {
-  let sequence = Promise.resolve();
-  trackIds.forEach((id) => {
-    sequence = sequence.then(() =>
-      new Promise((resolve) => {
-        const parameters = {
-          part: 'snippet',
-          snippet: {
-            playlistId,
-            resourceId: {
-              kind: 'youtube#video',
-              videoId: id,
-            },
-          },
-        };
+// function addAllSongs(playlistId, trackIds) {
+//   let sequence = Promise.resolve();
+//   trackIds.forEach((id) => {
+//     sequence = sequence.then(() =>
+//       new Promise((resolve) => {
+//         const parameters = {
+//           part: 'snippet',
+//           snippet: {
+//             playlistId,
+//             resourceId: {
+//               kind: 'youtube#video',
+//               videoId: id,
+//             },
+//           },
+//         };
 
-        const request = gapi.client.youtube.playlistItems.insert(parameters);
-        request.execute((res) => {
-          console.log(res);
-          console.log(`Added song successfully : ${res.snippet.title}`);
-          resolve();
-        });
-      }));
-  });
-}
+//         const request = gapi.client.youtube.playlistItems.insert(parameters);
+//         request.execute((res) => {
+//           console.log(res);
+//           console.log(`Added song successfully : ${res.snippet.title}`);
+//           resolve();
+//         });
+//       }));
+//   });
+// }
+
+// Create a brand new playlist, and fill it with a collection of tracks based on IDs.
+// function createPlaylist (dj, description, location, date, trackIds) {
+//   const title = `${dj} - ${location} ${date} | NTS mix`;
+
+//   // Define parameters.
+//   const parameters = {
+//     part: 'snippet, status',
+//     resource: {
+//       snippet: {
+//         title,
+//         description,
+//       },
+//       status: { privacyStatus: 'private' },
+//     },
+//   };
+
+//   // Execute request.
+//   const request = gapi.client.youtube.playlists.insert(parameters);
+//   request.execute((res) => {
+//     const playlistId = res.id;
+//     addAllSongs(playlistId, trackIds);
+//   });
+// }
 
 class App extends Component {
   state = {
     gapiReady: false,
     isAuthorized: false,
     error: '',
-    searching: false,
     mix: {
       dj: '',
       description: '',
-      location: '',
-      date: '',
+      locationDate: '',
       tracklist: [],
     },
-    url: '',
-    // url: 'https://www.nts.live/shows/sun-cut/episodes/sun-cut-27th-november-2017',
     playlistId: '',
   };
 
-  constructor(props) {
-    super(props);
-    this.initClient = this.initClient.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.findTracklist = this.findTracklist.bind(this);
-    this.createPlaylist = this.createPlaylist.bind(this);
-  }
-
-  componentWillMount() {
+  componentWillMount = () => {
     this.loadYoutubeAPI();
   }
 
-  loadYoutubeAPI() {
+  loadYoutubeAPI = () => {
     const script = document.createElement('script');
     script.src = 'https://apis.google.com/js/api.js';
     script.onload = () => {
@@ -131,7 +143,7 @@ class App extends Component {
   }
 
   // Initialise GAPI client and check the user's sign in status.
-  initClient() {
+  initClient = () => {
     gapi.client.init({
       apiKey: API_KEY,
       clientId: CLIENT_ID,
@@ -151,128 +163,29 @@ class App extends Component {
       });
   }
 
-  // Update the search text field.
-  handleChange(e) {
-    e.preventDefault();
-    if (e.target.name === 'nts-link') {
-      this.setState({ url: e.target.value });
+  updateMix = (mix) => {
+    this.setState({ mix });
+  }
+
+  updateError = (error) => {
+    this.setState({ error });
+  }
+
+  content = () => {
+    const { error, mix } = this.state;
+    if (error) {
+      return <div className="mix-box">{error}</div>;
+    } else if (mix.dj.length === 0) {
+      return '';
     }
+    return <Mix {...mix}/>;
   }
 
-  // Search NTS for a tracklist, and create a playlist from that.
-  findTracklist(e) {
-    e.preventDefault();
-    this.setState({ searching: true });
-    const { url } = this.state;
-    console.log(url);
-    axios.post('/api/nts/tracklist', { url })
-      .then((result) => {
-        this.setState({ mix: result.data, error: '', searching: false });
-
-        // Promise.all(tracklist.map((track) => {
-        //     return searchForTrack(track);
-        //   }))
-        //   .then((response) => {
-        //     console.log(response);
-        //     let trackIds = [];
-        //     for(let result of response) {
-        //       console.log(result);
-        //       if(result.pageInfo.totalResults > 0) {
-        //         trackIds.push(result.items[0].id.videoId);
-        //       }
-        //     }
-        //     this.createPlaylist(dj, description, location, date, trackIds);
-        //   });
-      })
-      .catch((err) => {
-        this.setState({ error: err.response.data.message, mix: {}, searching: false });
-      });
-  }
-
-  // Create a brand new playlist, and fill it with a collection of tracks based on IDs.
-  createPlaylist(dj, description, location, date, trackIds) {
-    this.setState({ status: 'CREATING PLAYLIST' });
-    const title = `${dj} - ${location} ${date} | NTS mix`;
-
-    // Define parameters.
-    const parameters = {
-      part: 'snippet, status',
-      resource: {
-        snippet: {
-          title,
-          description,
-        },
-        status: { privacyStatus: 'private' },
-      },
-    };
-
-    // Execute request.
-    const request = gapi.client.youtube.playlists.insert(parameters);
-    request.execute((res) => {
-      const playlistId = res.id;
-      this.setState({ status: 'ADDING SONGS' });
-      addAllSongs(playlistId, trackIds);
-    });
-  }
-
-  // Returns a list of track components.
-  tracklist() {
-    const { dj, description, tracklist } = this.state.mix;
-    const tracklistComponent = tracklist.map((track, key) =>
-      <Track key={key} artist={track.artist} title={track.title}/>);
-
-    if (tracklist.length > 0) {
-      return (
-        <div className="mix-box">
-          <h1>{dj.toUpperCase()}</h1>
-          <p>{description}</p>
-          <hr/>
-          {tracklistComponent}
-        </div>
-      );
-    }
-    return (<div></div>);
-  }
-
-  error() {
-    return (
-      <div className="mix-box">
-        {this.state.error}
-      </div>
-    );
-  }
-
-  content() {
-    const { error } = this.state;
-    if (error) return this.error();
-    return this.tracklist();
-  }
-
-  // Returns a context-sensitive search button
-  searchButton() {
+  render = () => {
     const { isAuthorized, gapiReady } = this.state;
-    if (this.state.searching) {
-      return (
-        <button className="search-button" value={this.state.url} disabled={true}>
-          <i className="fas fa-spinner spinner"></i>
-        </button>
-      );
-    }
-    return (
-      <button className="search-button" value={this.state.url} disabled={!gapiReady || !isAuthorized}>
-        <i className="fas fa-search"></i>
-      </button>
-    );
-  }
-
-  render() {
-    const { isAuthorized, gapiReady, searching } = this.state;
-
     let loginText;
     if (gapiReady) loginText = (isAuthorized) ? 'LOG OUT' : 'LOG IN';
     else loginText = 'WAIT';
-
-    const placeholderText = (isAuthorized) ? 'Paste an NTS mix URL here...' : 'Please log in to continue';
 
     return (
       <div className="overlay">
@@ -280,12 +193,7 @@ class App extends Component {
         {/* NTS Search Form */}
         <div className="content">
           <h1>WELCOME TO NTS MIX</h1>
-          <form onSubmit={this.findTracklist}>
-            {this.searchButton()}
-            <div className="search-wrapper">
-              <input type="text" name="nts-link" value={this.state.url} placeholder={placeholderText} disabled={!gapiReady || !isAuthorized || searching} onChange={this.handleChange}/>
-            </div>
-          </form>
+          <SearchForm gapiReady isAuthorized updateMix={this.updateMix} updateError={this.updateError}/>
           <br/>
         </div>
 

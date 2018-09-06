@@ -1,0 +1,106 @@
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import axios from 'axios';
+
+class SearchForm extends Component {
+  state = {
+    url: 'https://www.nts.live/shows/sun-cut/episodes/sun-cut-27th-november-2017',
+    searching: false,
+  }
+
+  constructor(props) {
+    super(props);
+    this.searchForTracklist = this.searchForTracklist.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  searchForTracklist(e) {
+    e.preventDefault();
+    this.setState({ searching: true });
+    const { url } = this.state;
+    axios.post('/api/nts/tracklist', { url })
+      .then((result) => {
+        this.setState({ searching: false });
+        this.props.updateMix(result.data);
+        this.props.updateError('');
+        // Promise.all(tracklist.map((track) => {
+        //     return searchForTrack(track);
+        //   }))
+        //   .then((response) => {
+        //     console.log(response);
+        //     let trackIds = [];
+        //     for(let result of response) {
+        //       console.log(result);
+        //       if(result.pageInfo.totalResults > 0) {
+        //         trackIds.push(result.items[0].id.videoId);
+        //       }
+        //     }
+        //     this.createPlaylist(dj, description, location, date, trackIds);
+        //   });
+      })
+      .catch((err) => {
+        this.setState({ searching: false });
+        this.props.updateMix({
+          dj: '',
+          description: '',
+          locationDate: '',
+          tracklist: [],
+        });
+        this.props.updateError(err.response.data.message);
+      });
+  }
+
+  // Returns a context-sensitive search button
+  searchButton() {
+    const { searching } = this.state;
+    const { isAuthorized, gapiReady } = this.props;
+    if (searching) {
+      return (
+        <button className="search-button" disabled={true}>
+          <i className="fas fa-spinner spinner"></i>
+        </button>
+      );
+    }
+    return (
+      <button className="search-button" disabled={!gapiReady || !isAuthorized}>
+        <i className="fas fa-search"></i>
+      </button>
+    );
+  }
+
+  // Update the contents of the search input.
+  handleChange(e) {
+    e.preventDefault();
+    if (e.target.name === 'search-input') {
+      this.setState({ url: e.target.value });
+    }
+  }
+
+  render() {
+    const { searching, url } = this.state;
+    const { isAuthorized, gapiReady } = this.props;
+    const placeholderText = (isAuthorized) ? 'Paste an NTS mix URL here...' : 'Please log in to continue';
+    return (
+      <form onSubmit={this.searchForTracklist}>
+        {this.searchButton()}
+        <div className="search-wrapper">
+          <input
+            type="text"
+            name="search-input"
+            value={url}
+            placeholder={placeholderText}
+            disabled={!gapiReady || !isAuthorized || searching}
+            onChange={this.handleChange}
+          />
+        </div>
+      </form>
+    );
+  }
+}
+
+SearchForm.propTypes = {
+  isAuthorized: PropTypes.bool.isRequired,
+  gapiReady: PropTypes.bool.isRequired,
+  updateMix: PropTypes.func.isRequired,
+};
+export default SearchForm;
