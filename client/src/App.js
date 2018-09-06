@@ -8,7 +8,7 @@ const API_KEY = 'AIzaSyBkgrN0HMZWQzMxgkXMGw2F_ysxFUdDe9o'; // API key is restric
 const CLIENT_ID = '859070380405-1fr4q5kqkkk460ccjianpi78kk14tqig.apps.googleusercontent.com';
 const SCOPE = 'https://www.googleapis.com/auth/youtube';
 const DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest'];
-const DO_NOT_DELETE = 'PLQ3YpXF4Wmw85ntSyGtW3_b8Up02Yw66V'; // Playlist ID. doesn't really matter if this goes public.
+const DO_NOT_DELETE = ['PLQ3YpXF4Wmw85ntSyGtW3_b8Up02Yw66V']; // Playlist ID. doesn't really matter if this goes public.
 
 let GoogleAuth;
 
@@ -25,13 +25,16 @@ function deleteAllPlaylists() {
   const parameters = {
     part: 'snippet',
     mine: true,
-    maxResults: 25,
+    maxResults: 50,
   };
 
   const request = gapi.client.youtube.playlists.list(parameters);
   request.execute((res) => {
     res.items.forEach((item) => {
-      if (item.id !== DO_NOT_DELETE) {
+      console.log(item.snippet.title);
+      console.log(DO_NOT_DELETE.indexOf(item.id) < -1);
+      if (DO_NOT_DELETE.indexOf(item.id) < 0) {
+        console.log(`deleting item ${item.id}`);
         deletePlaylist(item.id);
       }
     });
@@ -90,30 +93,6 @@ function handleAuthClick() {
 //   });
 // }
 
-// Create a brand new playlist, and fill it with a collection of tracks based on IDs.
-// function createPlaylist (dj, description, location, date, trackIds) {
-//   const title = `${dj} - ${location} ${date} | NTS mix`;
-
-//   // Define parameters.
-//   const parameters = {
-//     part: 'snippet, status',
-//     resource: {
-//       snippet: {
-//         title,
-//         description,
-//       },
-//       status: { privacyStatus: 'private' },
-//     },
-//   };
-
-//   // Execute request.
-//   const request = gapi.client.youtube.playlists.insert(parameters);
-//   request.execute((res) => {
-//     const playlistId = res.id;
-//     addAllSongs(playlistId, trackIds);
-//   });
-// }
-
 class App extends Component {
   state = {
     gapiReady: false,
@@ -153,7 +132,6 @@ class App extends Component {
       .then(() => {
         GoogleAuth = gapi.auth2.getAuthInstance();
         GoogleAuth.isSignedIn.listen((isAuthorized) => { this.setState({ isAuthorized }); });
-
         const user = GoogleAuth.currentUser.get();
         const isAuthorized = user.hasGrantedScopes(SCOPE);
         this.setState({ isAuthorized });
@@ -164,11 +142,22 @@ class App extends Component {
   }
 
   updateMix = (mix) => {
-    this.setState({ mix });
+    this.setState({
+      mix,
+      error: '',
+    });
   }
 
   updateError = (error) => {
-    this.setState({ error });
+    this.setState({
+      error,
+      mix: {
+        dj: '',
+        description: '',
+        locationDate: '',
+        tracklist: [],
+      },
+    });
   }
 
   content = () => {
@@ -178,7 +167,7 @@ class App extends Component {
     } else if (mix.dj.length === 0) {
       return '';
     }
-    return <Mix {...mix}/>;
+    return <Mix {...mix} updateError={this.updateError} />;
   }
 
   render = () => {
@@ -193,7 +182,12 @@ class App extends Component {
         {/* NTS Search Form */}
         <div className="content">
           <h1>WELCOME TO NTS MIX</h1>
-          <SearchForm gapiReady isAuthorized updateMix={this.updateMix} updateError={this.updateError}/>
+          <SearchForm
+            gapiReady
+            isAuthorized
+            updateMix={this.updateMix}
+            updateError={this.updateError}
+          />
           <br/>
         </div>
 

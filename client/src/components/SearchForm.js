@@ -22,7 +22,6 @@ class SearchForm extends Component {
       .then((result) => {
         this.setState({ searching: false });
         this.props.updateMix(result.data);
-        this.props.updateError('');
         // Promise.all(tracklist.map((track) => {
         //     return searchForTrack(track);
         //   }))
@@ -40,12 +39,6 @@ class SearchForm extends Component {
       })
       .catch((err) => {
         this.setState({ searching: false });
-        this.props.updateMix({
-          dj: '',
-          description: '',
-          locationDate: '',
-          tracklist: [],
-        });
         this.props.updateError(err.response.data.message);
       });
   }

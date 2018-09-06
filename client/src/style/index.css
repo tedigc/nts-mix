@@ -70,6 +70,22 @@ input {
     float: left;
 }
 
+.track-progress-container {
+    float: right;
+    display: inline-flex;
+    align-items: center; 
+}
+
+.track-message {
+    color : #777777;
+    float: left;
+    margin-right: 10px;
+}
+
+.track-status {
+    float: right;
+}
+
 .search-wrapper {
     overflow: hidden;
     padding-left: 0.5em;
@@ -84,6 +100,13 @@ input {
 input:disabled {
     color       : #777777;
     border-color: #777777;
+}
+
+.playlist-button {
+    float: right;
+    vertical-align: middle;
+    display: inline-flex;
+    align-items: center; 
 }
 
 button {
