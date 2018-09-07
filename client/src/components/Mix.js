@@ -3,41 +3,6 @@ import PropTypes from 'prop-types';
 import Track from './Track';
 import { createPlaylist, searchForVideo, addVideoToPlaylist } from '../util/youtube';
 
-// /**
-//  * Given an array of YouTube video IDs, add those videos to the playlist with the specified ID.
-//  */
-// export function addAllSongs(playlistId, tracklist) {
-//   let sequence = Promise.resolve();
-//   tracklist.forEach((track) => {
-//     sequence = sequence.then(() =>
-//       new Promise((resolve) => {
-//         const searchQuery = `${track.artist} - ${track.title}`;
-//         searchForVideo(searchQuery)
-//           .then((response) => {
-//             console.log(response);
-//             resolve();
-//           });
-//         // const parameters = {
-//         //   part: 'snippet',
-//         //   snippet: {
-//         //     playlistId,
-//         //     resourceId: {
-//         //       kind: 'youtube#video',
-//         //       videoId: id,
-//         //     },
-//         //   },
-//         // };
-
-//         // const request = gapi.client.youtube.playlistItems.insert(parameters);
-//         // request.execute((res) => {
-//         //   console.log(res);
-//         //   console.log(`Added song successfully : ${res.snippet.title}`);
-//         //   resolve();
-//         // });
-//       }));
-//   });
-// }
-
 class Mix extends Component {
   constructor(props) {
     super(props);

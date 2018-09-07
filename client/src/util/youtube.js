@@ -105,10 +105,23 @@ export function clearPlaylist(playlistId) {
   const parameters = {
     playlistId,
     part: 'snippet',
+    maxResults: 50,
   };
-  const request = gapi.client.youtube.playlistItems.list(parameters);
-  request.execute((response) => {
-    console.log(response);
+  const listRequest = gapi.client.youtube.playlistItems.list(parameters);
+  listRequest.execute((response) => {
+    let sequence = Promise.resolve();
+    response.items.forEach((video) => {
+      sequence = sequence.then(() =>
+        new Promise((resolve) => {
+          const delParameters = { id: video.id };
+          const delRequest = gapi.client.youtube.playlistItems.delete(delParameters);
+          delRequest.execute((delResponse) => {
+            console.log(delResponse);
+            console.log(`${video.snippet.title} successfully deleted`);
+            resolve();
+          });
+        }));
+    });
   });
 }
 
