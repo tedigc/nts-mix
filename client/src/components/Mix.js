@@ -49,6 +49,13 @@ class Mix extends Component {
                   }
                   resolve();
                 });
+            })
+            .catch((searchError) => {
+              console.log(searchError);
+              const { trackStatuses } = this.state;
+              trackStatuses[key] = 'failed';
+              this.setState({ trackStatuses });
+              resolve();
             });
         }));
     });

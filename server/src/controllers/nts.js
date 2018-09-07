@@ -4,6 +4,16 @@ import cheerio from 'cheerio';
 
 const router = express.Router();
 
+function getMethods(obj) {
+  let methods = [];
+  for(let m in obj) {
+      if(typeof obj[m] == "function") {
+          methods.push(m)
+      }
+  }
+  return methods;
+}
+
 /**
  * Submit a URL for an NTS show, and webscrape to find the tracklist.
  */
@@ -33,9 +43,9 @@ router.post('/tracklist', (req, res) => {
         return;
       }
 
-      // Scrape track details
-      const tracklist = $('ul.shows.tracks li').map((id, track) => {
-        const artist = $(track).find('span.track__artist').text().trim();
+      const tracklist = $('ul.shows.tracks li').map((index, track) => {
+        // There may be multiple featuring artists
+        const artist = $(track).find('span.track__artist').map((i, item) => $(item).text().trim()).get().join(' ');
         const title  = $(track).find('span.track__title').text().trim();
         return { artist, title };
       }).get();

@@ -4,7 +4,8 @@ import axios from 'axios';
 
 class SearchForm extends Component {
   state = {
-    url: 'https://www.nts.live/shows/sun-cut/episodes/sun-cut-27th-november-2017',
+    // url: 'https://www.nts.live/shows/sun-cut/episodes/sun-cut-27th-november-2017',
+    url: 'https://www.nts.live/shows/guests/episodes/bonobo-presents-outlier-radio-21st-march-2016',
     searching: false,
   }
 
@@ -22,20 +23,6 @@ class SearchForm extends Component {
       .then((result) => {
         this.setState({ searching: false });
         this.props.updateMix(result.data);
-        // Promise.all(tracklist.map((track) => {
-        //     return searchForTrack(track);
-        //   }))
-        //   .then((response) => {
-        //     console.log(response);
-        //     let trackIds = [];
-        //     for(let result of response) {
-        //       console.log(result);
-        //       if(result.pageInfo.totalResults > 0) {
-        //         trackIds.push(result.items[0].id.videoId);
-        //       }
-        //     }
-        //     this.createPlaylist(dj, description, location, date, trackIds);
-        //   });
       })
       .catch((err) => {
         this.setState({ searching: false });
