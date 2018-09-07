@@ -7,7 +7,7 @@ class Track extends Component {
     const icon = () => {
       if (status === 'searching') {
         return <i className="fas fa-spinner spinner track-status"></i>;
-      } else if (status === 'complete') {
+      } else if (status === 'success') {
         return <i className="fas fa-check track-status"></i>;
       } else if (status === 'failed') {
         return <i className="fas fa-ban track-status"></i>;

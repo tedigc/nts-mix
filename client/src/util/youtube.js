@@ -1,24 +1,68 @@
 /* global gapi */
+const DO_NOT_DELETE = ['PLQ3YpXF4Wmw85ntSyGtW3_b8Up02Yw66V']; // Playlist ID. doesn't really matter if this goes public.
 const has = Object.prototype.hasOwnProperty;
 
-// Create a brand new playlist, and fill it with a collection of tracks based on IDs.
-function createPlaylist(dj, description, locationDate) {
-  return new Promise((resolve, reject) => {
-    // Set up request parameters
-    const title = `${dj} - ${locationDate} | NTS mix`;
-    const parameters = {
-      part: 'snippet, status',
-      resource: {
-        snippet: {
-          title,
-          description,
-        },
-        status: { privacyStatus: 'private' },
-      },
-    };
+/**
+ * Search for a video
+ */
+export function searchForVideo(searchQuery) {
+  const parameters = {
+    part: 'snippet',
+    maxResults: 5,
+    order: 'relevance',
+    q: searchQuery,
+  };
+  return new Promise((resolve) => {
+    const request = gapi.client.youtube.search.list(parameters);
+    request.execute((response) => {
+      // TODO handle errors here
+      resolve(response);
+    });
+  });
+}
 
-    // Execute request.
-    const request = gapi.client.youtube.playlists.insert(parameters);
+/**
+ * Add a single video to a playlist
+ */
+export function addVideoToPlaylist(playlistId, videoId) {
+  const parameters = {
+    part: 'snippet',
+    snippet: {
+      playlistId,
+      resourceId: {
+        kind: 'youtube#video',
+        videoId,
+      },
+    },
+  };
+  return new Promise((resolve, reject) => {
+    const request = gapi.client.youtube.playlistItems.insert(parameters);
+    request.execute((response) => {
+      // TODO handle errors here
+      resolve(response);
+    });
+  });
+}
+
+/**
+ * Creates a new playlist with a given title and description
+ */
+export function createPlaylist(title, description) {
+  // Set up request parameters
+  const parameters = {
+    part: 'snippet, status',
+    resource: {
+      snippet: {
+        title,
+        description,
+      },
+      status: { privacyStatus: 'private' },
+    },
+  };
+
+  // Execute request.
+  const request = gapi.client.youtube.playlists.insert(parameters);
+  return new Promise((resolve, reject) => {
     request.execute((response) => {
       if (response && has.call(response, 'error')) {
         reject(response.error);
@@ -28,8 +72,76 @@ function createPlaylist(dj, description, locationDate) {
   });
 }
 
-function secondFunc() {
+/**
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * TODO delete everything below
+ */
 
+/**
+ *  Lists all of a user's playlists
+ */
+export function listPlaylists() {
+  const parameters = {
+    part: 'snippet',
+    mine: true,
+    maxResults: 50,
+  };
+
+  const request = gapi.client.youtube.playlists.list(parameters);
+  request.execute((response) => {
+    console.log();
+    console.log('Playlists:');
+    response.items.forEach((playlist) => {
+      console.log(`  ${playlist.snippet.title} ... ${playlist.id}`);
+    });
+    console.log();
+  });
 }
 
-export { createPlaylist, secondFunc };
+/**
+ * Delete all the videos from a given playlist
+ */
+export function clearPlaylist(playlistId) {
+  const parameters = {
+    playlistId,
+    part: 'snippet',
+  };
+  const request = gapi.client.youtube.playlistItems.list(parameters);
+  request.execute((response) => {
+    console.log(response);
+  });
+}
+
+/**
+ * Delete the playlist with the given ID
+ */
+export function deletePlaylist(playlistId) {
+  const request = gapi.client.youtube.playlists.delete({ id: playlistId });
+  request.execute((res) => {
+    console.log(res);
+  });
+}
+
+/**
+ * Deletes all playlists, except for those found in the DO_NOT_DELETE array
+ */
+export function deleteAllPlaylists() {
+  const parameters = {
+    part: 'snippet',
+    mine: true,
+    maxResults: 50,
+  };
+
+  const request = gapi.client.youtube.playlists.list(parameters);
+  request.execute((res) => {
+    console.log();
+    console.log('Deleting playlists:');
+    res.items.forEach((playlist) => {
+      if (DO_NOT_DELETE.indexOf(playlist.id) < 0) {
+        console.log(`  Deleting '${playlist.snippet.title}' - ${playlist.id}`);
+        deletePlaylist(playlist.id);
+      }
+    });
+    console.log();
+  });
+}

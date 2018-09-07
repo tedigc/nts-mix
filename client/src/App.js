@@ -3,59 +3,14 @@ import React, { Component } from 'react';
 import SearchForm from './components/SearchForm';
 import Mix from './components/Mix';
 import './style/index.css';
+import { listPlaylists, clearPlaylist, deleteAllPlaylists } from './util/youtube';
 
 const API_KEY = 'AIzaSyBkgrN0HMZWQzMxgkXMGw2F_ysxFUdDe9o'; // API key is restricted, so can be public.
 const CLIENT_ID = '859070380405-1fr4q5kqkkk460ccjianpi78kk14tqig.apps.googleusercontent.com';
 const SCOPE = 'https://www.googleapis.com/auth/youtube';
 const DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest'];
-const DO_NOT_DELETE = ['PLQ3YpXF4Wmw85ntSyGtW3_b8Up02Yw66V']; // Playlist ID. doesn't really matter if this goes public.
 
 let GoogleAuth;
-
-// Delete the YouTube playlist with the given ID.
-function deletePlaylist(playlistId) {
-  const request = gapi.client.youtube.playlists.delete({ id: playlistId });
-  request.execute((res) => {
-    console.log(res);
-  });
-}
-
-// Removes all playlists, except for my own "lectures and talks" playlist.
-function deleteAllPlaylists() {
-  const parameters = {
-    part: 'snippet',
-    mine: true,
-    maxResults: 50,
-  };
-
-  const request = gapi.client.youtube.playlists.list(parameters);
-  request.execute((res) => {
-    res.items.forEach((item) => {
-      console.log(item.snippet.title);
-      console.log(DO_NOT_DELETE.indexOf(item.id) < -1);
-      if (DO_NOT_DELETE.indexOf(item.id) < 0) {
-        console.log(`deleting item ${item.id}`);
-        deletePlaylist(item.id);
-      }
-    });
-  });
-}
-
-// Search for a track using the YouTube API.
-// function searchForTrack(track) {
-//   const parameters = {
-//     part: 'snippet',
-//     maxResults: 5,
-//     order: 'relevance',
-//     q: track,
-//   };
-//   const request = gapi.client.youtube.search.list(parameters);
-//   return new Promise((resolve) => {
-//     request.execute((res) => {
-//       resolve(res);
-//     });
-//   });
-// }
 
 // Log in or out.
 function handleAuthClick() {
@@ -65,33 +20,6 @@ function handleAuthClick() {
     GoogleAuth.signIn();
   }
 }
-
-// Given an array of YouTube video IDs, add those videos to the playlist with the specified ID.
-// function addAllSongs(playlistId, trackIds) {
-//   let sequence = Promise.resolve();
-//   trackIds.forEach((id) => {
-//     sequence = sequence.then(() =>
-//       new Promise((resolve) => {
-//         const parameters = {
-//           part: 'snippet',
-//           snippet: {
-//             playlistId,
-//             resourceId: {
-//               kind: 'youtube#video',
-//               videoId: id,
-//             },
-//           },
-//         };
-
-//         const request = gapi.client.youtube.playlistItems.insert(parameters);
-//         request.execute((res) => {
-//           console.log(res);
-//           console.log(`Added song successfully : ${res.snippet.title}`);
-//           resolve();
-//         });
-//       }));
-//   });
-// }
 
 class App extends Component {
   state = {
@@ -200,9 +128,23 @@ class App extends Component {
           <button
             className="outline"
             onClick={() => deleteAllPlaylists() }
-            disabled={!gapiReady || !isAuthorized}
+            disabled={!gapiReady || !isAuthorized || true}
             style={{ marginLeft: 10 }}>
             DELETE ALL PLAYLISTS
+          </button>
+          <button
+            className="outline"
+            onClick={() => listPlaylists() }
+            disabled={!gapiReady || !isAuthorized}
+            style={{ marginLeft: 10 }}>
+            LIST PLAYLISTS
+          </button>
+          <button
+            className="outline"
+            onClick={() => clearPlaylist('PLXl_nPEBC_L2CY6-japw2FiM6_lDrRupL') }
+            disabled={!gapiReady || !isAuthorized}
+            style={{ marginLeft: 10 }}>
+            CLEAR
           </button>
         </div>
 
