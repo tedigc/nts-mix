@@ -16,7 +16,7 @@ class Track extends Component {
     };
 
     return (
-      <div className="track">
+      <div>
         <span>{artist} - {title}</span>
         <div className="track-progress-container">
           <span className="track-message">{message}</span>

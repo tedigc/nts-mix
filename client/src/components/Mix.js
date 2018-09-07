@@ -7,13 +7,18 @@ class Mix extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      status: 'default',
+      playlistURL: '',
       trackMessages: Array(this.props.tracklist.length).fill(''),
       trackStatuses: Array(this.props.tracklist.length).fill(''),
     };
   }
 
   createPlaylist = () => {
-    this.setState({ trackStatuses: Array(this.props.tracklist.length).fill('searching') });
+    this.setState({
+      inProgress: 'searching',
+      trackStatuses: Array(this.props.tracklist.length).fill('searching'),
+    });
     const { dj, description, locationDate, tracklist } = this.props;
     const playlistTitle = `${dj} - ${locationDate} | NTS Mix`;
     const playlistId = 'PLXl_nPEBC_L2CY6-japw2FiM6_lDrRupL';
@@ -35,11 +40,32 @@ class Mix extends Component {
                   const { trackStatuses } = this.state;
                   trackStatuses[key] = 'success';
                   this.setState({ trackStatuses });
+
+                  if (key === tracklist.length - 1) {
+                    this.setState({
+                      inProgress: 'complete',
+                      playlistURL: `https://www.youtube.com/playlist?list=${playlistId}`,
+                    });
+                  }
                   resolve();
                 });
             });
         }));
     });
+  }
+
+  button = () => {
+    const { inProgress } = this.state;
+    switch (inProgress) {
+      case 'searching': return <button className="playlist-button" onClick={this.createPlaylist} disabled><i className="fa fa-spinner spinner"></i> &nbsp; CREATING PLAYLIST </button>;
+      case 'complete': return <button className="playlist-button" onClick={this.openPlaylist}><i className="fas fa-external-link-alt"></i> &nbsp; OPEN </button>;
+      default: return <button className="playlist-button" onClick={this.createPlaylist}><i className="far fa-plus-square"></i> &nbsp; CREATE PLAYLIST </button>;
+    }
+  }
+
+  openPlaylist = () => {
+    const win = window.open(this.state.playlistURL, '_blank');
+    win.focus();
   }
 
   render() {
@@ -61,7 +87,7 @@ class Mix extends Component {
         <hr/>
         {tracklistComponent}
         <br/>
-        <button className="playlist-button" onClick={this.createPlaylist}><i className="far fa-plus-square"></i> &nbsp; CREATE PLAYLIST </button>
+        {this.button()}
         <br/>
       </div>
     );
