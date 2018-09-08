@@ -77,7 +77,7 @@ class Mix extends Component {
   tracklist() {
     const { trackMessages, trackStatuses } = this.state;
     const { tracklist } = this.props;
-    if (tracklist.length === 0) return <h2 className="dark">NO TRACKLIST PROVIDED</h2>;
+    if (tracklist.length === 0) return <div className="error">NO TRACKLIST PROVIDED</div>;
     return tracklist.map((track, key) =>
       <Track
         key={key}

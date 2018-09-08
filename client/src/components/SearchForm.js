@@ -10,15 +10,15 @@ class SearchForm extends Component {
     searching: false,
   }
 
-  constructor(props) {
-    super(props);
-    this.searchForTracklist = this.searchForTracklist.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-  }
-
-  searchForTracklist(e) {
+  searchForTracklist = (e) => {
     e.preventDefault();
     this.setState({ searching: true });
+    this.props.updateMix({
+      dj: '',
+      description: '',
+      locationDate: '',
+      tracklist: [],
+    });
     const { url } = this.state;
     axios.post('/api/nts/tracklist', { url })
       .then((result) => {
@@ -32,7 +32,7 @@ class SearchForm extends Component {
   }
 
   // Returns a context-sensitive search button
-  searchButton() {
+  searchButton = () => {
     const { searching } = this.state;
     const { isAuthorized, gapiReady } = this.props;
     if (searching) {
@@ -50,7 +50,7 @@ class SearchForm extends Component {
   }
 
   // Update the contents of the search input.
-  handleChange(e) {
+  handleChange = (e) => {
     e.preventDefault();
     if (e.target.name === 'search-input') {
       this.setState({ url: e.target.value });

@@ -91,7 +91,7 @@ class App extends Component {
   content = () => {
     const { error, mix } = this.state;
     if (error) {
-      return <div className="mix-box"><h1>Something went wrong...</h1>{error}</div>;
+      return <div className="mix-box"><h1>Something went wrong...</h1><div className="error">{error}</div></div>;
     } else if (mix.dj.length === 0) {
       return '';
     }
