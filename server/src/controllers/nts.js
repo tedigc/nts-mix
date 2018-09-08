@@ -4,23 +4,13 @@ import cheerio from 'cheerio';
 
 const router = express.Router();
 
-function getMethods(obj) {
-  let methods = [];
-  for(let m in obj) {
-      if(typeof obj[m] == "function") {
-          methods.push(m)
-      }
-  }
-  return methods;
-}
-
 /**
  * Submit a URL for an NTS show, and webscrape to find the tracklist.
  */
 router.post('/tracklist', (req, res) => {
   // Check the URL to search isn't empty
-  if(req.body.url.length === 0) {
-    res.status(400).json({ message: "Paste the URL of an NTS mix in the search box above." });
+  if (req.body.url.length === 0) {
+    res.status(400).json({ message: 'Paste the URL of an NTS mix in the search box above.' });
     return;
   }
   // Scrape the HTML from the URL
@@ -38,15 +28,17 @@ router.post('/tracklist', (req, res) => {
       const locationDate = $('div.bio__title__subtitle').text().trim();
 
       // Handle invalid mix
-      if(dj.length === 0) {
+      if (dj.length === 0) {
         res.status(404).json({ message: "We couldn't find an NTS mix at that URL." });
         return;
       }
 
       const tracklist = $('ul.shows.tracks li').map((index, track) => {
         // There may be multiple featuring artists
-        const artist = $(track).find('span.track__artist').map((i, item) => $(item).text().trim()).get().join(' ');
-        const title  = $(track).find('span.track__title').text().trim();
+        const artist = $(track).find('span.track__artist').map((i, item) => $(item).text().trim())
+          .get()
+          .join(' ');
+        const title = $(track).find('span.track__title').text().trim();
         return { artist, title };
       }).get();
 

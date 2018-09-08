@@ -13,6 +13,10 @@ h1 {
     font-size: 28px;
 }
 
+h2 {
+    font-size: 22px;
+}
+
 body {
     background-color: #000000;
     color           : #FFFFFF;
@@ -35,13 +39,15 @@ body {
     background: rgba(0, 0, 0, 0.5);
 }
 
-.content {
+.search-box {
     background-color: #000000;
     width : 600px;
     height: auto;
     margin: auto;
     margin-top: 100px;
     padding: 40px;
+    padding-top: 30px;
+    padding-bottom: 36px;
 }
 
 .mix-box {
@@ -52,7 +58,8 @@ body {
     margin-top: 50px;
     margin-bottom: 100px;
     padding: 40px;
-    padding-bottom: 50px;
+    padding-top: 30px;
+    padding-bottom: 32px;
 }
 
 input {
@@ -103,6 +110,11 @@ input:disabled {
     border-color: #777777;
 }
 
+.playlist-button-wrapper {
+    /* float: right; */
+    margin-top: 20px;
+    margin-bottom:50px;
+}
 .playlist-button {
     float: right;
     vertical-align: middle;
@@ -175,4 +187,8 @@ button:disabled {
 
 ::placeholder { /* Most modern browsers support this now. */
    color:    #777777;
+}
+
+.dark {
+    color:    #777777;
 }

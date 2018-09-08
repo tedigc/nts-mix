@@ -51,7 +51,6 @@ class Mix extends Component {
                 });
             })
             .catch((searchError) => {
-              console.log(searchError);
               const { trackStatuses } = this.state;
               trackStatuses[key] = 'failed';
               this.setState({ trackStatuses });
@@ -64,9 +63,9 @@ class Mix extends Component {
   button = () => {
     const { inProgress } = this.state;
     switch (inProgress) {
-      case 'searching': return <button className="playlist-button" onClick={this.createPlaylist} disabled><i className="fa fa-spinner spinner"></i> &nbsp; CREATING PLAYLIST </button>;
-      case 'complete': return <button className="playlist-button" onClick={this.openPlaylist}><i className="fas fa-external-link-alt"></i> &nbsp; OPEN </button>;
-      default: return <button className="playlist-button" onClick={this.createPlaylist}><i className="far fa-plus-square"></i> &nbsp; CREATE PLAYLIST </button>;
+      case 'searching': return <div className="playlist-button-wrapper"><button className="playlist-button" onClick={this.createPlaylist} disabled><i className="fa fa-spinner spinner"></i> &nbsp; CREATING PLAYLIST </button></div>;
+      case 'complete': return <div className="playlist-button-wrapper"><button className="playlist-button" onClick={this.openPlaylist}><i className="fas fa-external-link-alt"></i> &nbsp; OPEN </button></div>;
+      default: return <div className="playlist-button-wrapper"><button className="playlist-button" onClick={this.createPlaylist}><i className="far fa-plus-square"></i> &nbsp; CREATE PLAYLIST </button></div>;
     }
   }
 
@@ -75,10 +74,11 @@ class Mix extends Component {
     win.focus();
   }
 
-  render() {
+  tracklist() {
     const { trackMessages, trackStatuses } = this.state;
-    const { dj, description, tracklist } = this.props;
-    const tracklistComponent = tracklist.map((track, key) =>
+    const { tracklist } = this.props;
+    if (tracklist.length === 0) return <h2 className="dark">NO TRACKLIST PROVIDED</h2>;
+    return tracklist.map((track, key) =>
       <Track
         key={key}
         artist={track.artist}
@@ -86,16 +86,17 @@ class Mix extends Component {
         message={trackMessages[key]}
         status={trackStatuses[key]}
       />);
+  }
 
+  render() {
+    const { dj, description, tracklist } = this.props;
     return (
       <div className="mix-box">
         <h1>{dj.toUpperCase()}</h1>
         <p>{description}</p>
         <hr/>
-        {tracklistComponent}
-        <br/>
-        {this.button()}
-        <br/>
+        {this.tracklist()}
+        {tracklist.length > 0 && this.button()}
       </div>
     );
   }

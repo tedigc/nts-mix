@@ -108,7 +108,7 @@ class App extends Component {
       <div className="overlay">
 
         {/* NTS Search Form */}
-        <div className="content">
+        <div className="search-box">
           <h1>WELCOME TO NTS MIX</h1>
           <SearchForm
             gapiReady

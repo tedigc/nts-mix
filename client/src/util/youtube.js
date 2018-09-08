@@ -6,23 +6,15 @@ const has = Object.prototype.hasOwnProperty;
  * Search for a video
  */
 export function searchForVideo(searchQuery) {
-
-  // const temp = 'Anderson PaakSonyae EliseThe Game - Room In Here';
-
   const parameters = {
     part: 'snippet',
     maxResults: 5,
     order: 'relevance',
     q: searchQuery,
   };
-
-  console.log('searching for: ');
-  console.log(searchQuery);
-  console.log();
   return new Promise((resolve, reject) => {
     const request = gapi.client.youtube.search.list(parameters);
     request.execute((response) => {
-      console.log(response);
       if (response.items.length === 0) reject(new Error('No results found'));
       resolve(response);
     });
