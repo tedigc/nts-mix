@@ -21,26 +21,42 @@ class Mix extends Component {
     });
     const { dj, description, locationDate, tracklist } = this.props;
     const playlistTitle = `${dj} - ${locationDate} | NTS Mix`;
-    const playlistId = 'PLXl_nPEBC_L2CY6-japw2FiM6_lDrRupL';
+    // const playlistId = 'PLXl_nPEBC_L2CY6-japw2FiM6_lDrRupL';
 
-    // Handle each track's search and add in sequence
-    let sequence = Promise.resolve();
-    tracklist.forEach((track, key) => {
-      sequence = sequence.then(() =>
+    createPlaylist(playlistTitle, description)
+      .then((response) => {
+        const playlistId = response.id;
+        // Handle each track's search and add in sequence
+        let sequence = Promise.resolve();
+        tracklist.forEach((track, key) => {
+          sequence = sequence.then(() =>
 
-        new Promise((resolve) => {
-          // First, search for the video
-          const searchQuery = `${track.artist} - ${track.title}`;
-          searchForVideo(searchQuery)
-            .then((searchResponse) => {
-              // If found, add the first search result to the playlist
-              const { videoId } = searchResponse.items[0].id;
-              addVideoToPlaylist(playlistId, videoId)
-                .then((addResponse) => {
+            new Promise((resolve) => {
+              // First, search for the video
+              const searchQuery = `${track.artist} - ${track.title}`;
+              searchForVideo(searchQuery)
+                .then((searchResponse) => {
+                  // If found, add the first search result to the playlist
+                  const { videoId } = searchResponse.items[0].id;
+                  addVideoToPlaylist(playlistId, videoId)
+                    .then((addResponse) => {
+                      const { trackStatuses } = this.state;
+                      trackStatuses[key] = 'success';
+                      this.setState({ trackStatuses });
+
+                      if (key === tracklist.length - 1) {
+                        this.setState({
+                          inProgress: 'complete',
+                          playlistURL: `https://www.youtube.com/playlist?list=${playlistId}`,
+                        });
+                      }
+                      resolve();
+                    });
+                })
+                .catch((searchError) => {
                   const { trackStatuses } = this.state;
-                  trackStatuses[key] = 'success';
+                  trackStatuses[key] = 'failed';
                   this.setState({ trackStatuses });
-
                   if (key === tracklist.length - 1) {
                     this.setState({
                       inProgress: 'complete',
@@ -49,15 +65,9 @@ class Mix extends Component {
                   }
                   resolve();
                 });
-            })
-            .catch((searchError) => {
-              const { trackStatuses } = this.state;
-              trackStatuses[key] = 'failed';
-              this.setState({ trackStatuses });
-              resolve();
-            });
-        }));
-    });
+            }));
+        });
+      });
   }
 
   button = () => {
