@@ -2,9 +2,9 @@ import express from 'express';
 import morgan from 'morgan';
 import path from 'path';
 import bodyParser from 'body-parser';
-import nts from './controllers/nts';
+import request from 'request';
+import nts from './util/nts';
 
-// Initialise app.
 const port = process.env.PORT || 8080;
 const app = express();
 
@@ -13,10 +13,38 @@ app.use(express.static(path.join(__dirname, '../../client/build')));
 app.use(bodyParser.json());
 app.use(morgan('dev'));
 
-// Set up routes.
-app.use('/api/nts', nts);
+/**
+ * Fetch the HTML from an NTS webpage, and scrape it for mix information
+ */
+app.post('/api/nts/tracklist', (req, res) => {
+  // Check the URL to search isn't empty
+  if (req.body.url.length === 0) {
+    res.status(400).json({ message: 'Paste the URL of an NTS mix in the search box above.' });
+    return;
+  }
+  // Scrape the HTML from the URL
+  request.get(req.body.url, (err, response, body) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json(err);
+    } else {
+      const { dj, description, locationDate, tracklist } = nts.scrape(body);
 
-// Serve web application.
+      // // Handle invalid mix
+      if (dj.length === 0) {
+        res.status(404).json({ message: "We couldn't find an NTS mix at that URL." });
+        return;
+      }
+
+      // Send info to client
+      res.json({ dj, description, locationDate, tracklist });
+    }
+  });
+});
+
+/**
+ * Serve up the client side application
+ */
 app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, '../../client/build/index.html'));
 });

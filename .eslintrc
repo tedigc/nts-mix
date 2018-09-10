@@ -6,6 +6,8 @@
   ],
   "rules"   : {
     "no-console": "off",
+    "no-await-in-loop": "off",
+    "no-restricted-syntax": "off",
     "object-curly-newline": ["error", { "multiline": true } ],
     "react/jsx-uses-vars" : ["error"],
     "react/jsx-uses-react": ["error"]

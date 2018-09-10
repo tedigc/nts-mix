@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Track from './Track';
-import { createPlaylist, searchForVideo, addVideoToPlaylist } from '../util/youtube';
+import youtube from '../util/youtube';
 import asyncForEach from '../util/async';
 
 class Mix extends Component {
@@ -22,15 +22,18 @@ class Mix extends Component {
     });
     const { dj, description, locationDate, tracklist } = this.props;
     const playlistTitle = `${dj} - ${locationDate} | NTS Mix`;
-    const playlistId = 'PLQ3YpXF4Wmw-KCQdRuG95gAQqEl_Y7C5d';
-    // const playlistId = response.id;
 
+    // const createResponse = await createPlaylist(playlistTitle, description);
+    // const playlistId = createResponse.id;
+    const playlistId = 'PLQ3YpXF4Wmw-KCQdRuG95gAQqEl_Y7C5d';
+
+    // Search for each track, and add it to the newly created playlist
     await asyncForEach(tracklist, async (track, i) => {
       const { trackStatuses } = this.state;
       const searchQuery = `${track.artist} - ${track.title}`;
-      const searchResponse = await searchForVideo(searchQuery);
+      const searchResponse = await youtube.searchForVideo(searchQuery);
 
-      // If no results are found, change the status/icon and continue
+      // If no results are found, change the status/icon and process the next track
       if (searchResponse.items.length === 0) {
         trackStatuses[i] = 'failed';
         await this.setState({ trackStatuses });
@@ -39,7 +42,7 @@ class Mix extends Component {
 
       // Otherwise, add the video to the playlist
       const { videoId } = searchResponse.items[0].id;
-      await addVideoToPlaylist(playlistId, videoId);
+      await youtube.addVideoToPlaylist(playlistId, videoId);
       trackStatuses[i] = 'success';
       await this.setState({ trackStatuses });
     });

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import SearchForm from './components/SearchForm';
 import Mix from './components/Mix';
 import './style/index.css';
-import { listPlaylists, clearPlaylist, deleteAllPlaylists } from './util/youtube';
+import youtube from './util/youtube';
 
 const API_KEY = 'AIzaSyBkgrN0HMZWQzMxgkXMGw2F_ysxFUdDe9o'; // API key is restricted, so can be public.
 const CLIENT_ID = '859070380405-1fr4q5kqkkk460ccjianpi78kk14tqig.apps.googleusercontent.com';
@@ -127,21 +127,21 @@ class App extends Component {
           <button className="outline" onClick={() => handleAuthClick() } disabled={!gapiReady}>{loginText}</button>
           <button
             className="outline"
-            onClick={() => deleteAllPlaylists() }
+            onClick={() => youtube.deleteAllPlaylists() }
             disabled={!gapiReady || !isAuthorized }
             style={{ marginLeft: 10 }}>
             DELETE ALL PLAYLISTS
           </button>
           <button
             className="outline"
-            onClick={() => listPlaylists() }
+            onClick={() => youtube.listPlaylists() }
             disabled={!gapiReady || !isAuthorized}
             style={{ marginLeft: 10 }}>
             LIST PLAYLISTS
           </button>
           <button
             className="outline"
-            onClick={() => clearPlaylist('PLQ3YpXF4Wmw-KCQdRuG95gAQqEl_Y7C5d') }
+            onClick={() => youtube.clearPlaylist('PLQ3YpXF4Wmw-KCQdRuG95gAQqEl_Y7C5d') }
             disabled={!gapiReady || !isAuthorized}
             style={{ marginLeft: 10 }}>
             CLEAR

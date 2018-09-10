@@ -5,7 +5,7 @@ const has = Object.prototype.hasOwnProperty;
 /**
  * Search for a video
  */
-export async function searchForVideo(searchQuery) {
+async function searchForVideo(searchQuery) {
   const parameters = {
     part: 'snippet',
     maxResults: 5,
@@ -24,7 +24,7 @@ export async function searchForVideo(searchQuery) {
 /**
  * Add a single video to a playlist
  */
-export async function addVideoToPlaylist(playlistId, videoId) {
+async function addVideoToPlaylist(playlistId, videoId) {
   const parameters = {
     part: 'snippet',
     snippet: {
@@ -47,7 +47,7 @@ export async function addVideoToPlaylist(playlistId, videoId) {
 /**
  * Creates a new playlist with a given title and description
  */
-export async function createPlaylist(title, description) {
+async function createPlaylist(title, description) {
   // Set up request parameters
   const parameters = {
     part: 'snippet, status',
@@ -80,7 +80,7 @@ export async function createPlaylist(title, description) {
 /**
  *  Lists all of a user's playlists
  */
-export function listPlaylists() {
+function listPlaylists() {
   const parameters = {
     part: 'snippet',
     mine: true,
@@ -101,7 +101,7 @@ export function listPlaylists() {
 /**
  * Delete all the videos from a given playlist
  */
-export async function clearPlaylist(playlistId) {
+async function clearPlaylist(playlistId) {
   const parameters = {
     playlistId,
     part: 'snippet',
@@ -129,7 +129,7 @@ export async function clearPlaylist(playlistId) {
 /**
  * Delete the playlist with the given ID
  */
-export function deletePlaylist(playlistId) {
+function deletePlaylist(playlistId) {
   const request = gapi.client.youtube.playlists.delete({ id: playlistId });
   request.execute((res) => {
     console.log(res);
@@ -139,7 +139,7 @@ export function deletePlaylist(playlistId) {
 /**
  * Deletes all playlists, except for those found in the DO_NOT_DELETE array
  */
-export function deleteAllPlaylists() {
+function deleteAllPlaylists() {
   const parameters = {
     part: 'snippet',
     mine: true,
@@ -159,3 +159,13 @@ export function deleteAllPlaylists() {
     console.log();
   });
 }
+
+export default {
+  searchForVideo,
+  addVideoToPlaylist,
+  createPlaylist,
+  listPlaylists,
+  clearPlaylist,
+  deletePlaylist,
+  deleteAllPlaylists,
+};
