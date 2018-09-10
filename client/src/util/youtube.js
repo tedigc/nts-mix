@@ -1,21 +1,21 @@
 /* global gapi */
-const DO_NOT_DELETE = ['PLQ3YpXF4Wmw85ntSyGtW3_b8Up02Yw66V']; // Playlist ID. doesn't really matter if this goes public.
+const DO_NOT_DELETE = ['PLQ3YpXF4Wmw-KCQdRuG95gAQqEl_Y7C5d', 'PLQ3YpXF4Wmw8jQkdCTowULP-pmUGMP590']; // Playlist ID. doesn't really matter if this goes public.
 const has = Object.prototype.hasOwnProperty;
 
 /**
  * Search for a video
  */
-export function searchForVideo(searchQuery) {
+export async function searchForVideo(searchQuery) {
   const parameters = {
     part: 'snippet',
     maxResults: 5,
     order: 'relevance',
     q: searchQuery,
   };
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const request = gapi.client.youtube.search.list(parameters);
     request.execute((response) => {
-      if (response.items.length === 0) reject(new Error('No results found'));
+      // if (response.items.length === 0) reject(new Error('No results found'));
       resolve(response);
     });
   });
@@ -24,7 +24,7 @@ export function searchForVideo(searchQuery) {
 /**
  * Add a single video to a playlist
  */
-export function addVideoToPlaylist(playlistId, videoId) {
+export async function addVideoToPlaylist(playlistId, videoId) {
   const parameters = {
     part: 'snippet',
     snippet: {
@@ -35,7 +35,7 @@ export function addVideoToPlaylist(playlistId, videoId) {
       },
     },
   };
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const request = gapi.client.youtube.playlistItems.insert(parameters);
     request.execute((response) => {
       // TODO handle errors here
@@ -47,7 +47,7 @@ export function addVideoToPlaylist(playlistId, videoId) {
 /**
  * Creates a new playlist with a given title and description
  */
-export function createPlaylist(title, description) {
+export async function createPlaylist(title, description) {
   // Set up request parameters
   const parameters = {
     part: 'snippet, status',
@@ -101,7 +101,7 @@ export function listPlaylists() {
 /**
  * Delete all the videos from a given playlist
  */
-export function clearPlaylist(playlistId) {
+export async function clearPlaylist(playlistId) {
   const parameters = {
     playlistId,
     part: 'snippet',

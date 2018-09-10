@@ -128,7 +128,7 @@ class App extends Component {
           <button
             className="outline"
             onClick={() => deleteAllPlaylists() }
-            disabled={!gapiReady || !isAuthorized || true}
+            disabled={!gapiReady || !isAuthorized }
             style={{ marginLeft: 10 }}>
             DELETE ALL PLAYLISTS
           </button>
@@ -141,7 +141,7 @@ class App extends Component {
           </button>
           <button
             className="outline"
-            onClick={() => clearPlaylist('PLXl_nPEBC_L2CY6-japw2FiM6_lDrRupL') }
+            onClick={() => clearPlaylist('PLQ3YpXF4Wmw-KCQdRuG95gAQqEl_Y7C5d') }
             disabled={!gapiReady || !isAuthorized}
             style={{ marginLeft: 10 }}>
             CLEAR

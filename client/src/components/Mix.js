@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Track from './Track';
 import { createPlaylist, searchForVideo, addVideoToPlaylist } from '../util/youtube';
+import asyncForEach from '../util/async';
 
 class Mix extends Component {
   constructor(props) {
@@ -14,60 +15,40 @@ class Mix extends Component {
     };
   }
 
-  createPlaylist = () => {
-    this.setState({
+  createPlaylist = async () => {
+    await this.setState({
       inProgress: 'searching',
       trackStatuses: Array(this.props.tracklist.length).fill('searching'),
     });
     const { dj, description, locationDate, tracklist } = this.props;
     const playlistTitle = `${dj} - ${locationDate} | NTS Mix`;
-    // const playlistId = 'PLXl_nPEBC_L2CY6-japw2FiM6_lDrRupL';
+    const playlistId = 'PLQ3YpXF4Wmw-KCQdRuG95gAQqEl_Y7C5d';
+    // const playlistId = response.id;
 
-    createPlaylist(playlistTitle, description)
-      .then((response) => {
-        const playlistId = response.id;
-        // Handle each track's search and add in sequence
-        let sequence = Promise.resolve();
-        tracklist.forEach((track, key) => {
-          sequence = sequence.then(() =>
+    await asyncForEach(tracklist, async (track, i) => {
+      const { trackStatuses } = this.state;
+      const searchQuery = `${track.artist} - ${track.title}`;
+      const searchResponse = await searchForVideo(searchQuery);
 
-            new Promise((resolve) => {
-              // First, search for the video
-              const searchQuery = `${track.artist} - ${track.title}`;
-              searchForVideo(searchQuery)
-                .then((searchResponse) => {
-                  // If found, add the first search result to the playlist
-                  const { videoId } = searchResponse.items[0].id;
-                  addVideoToPlaylist(playlistId, videoId)
-                    .then((addResponse) => {
-                      const { trackStatuses } = this.state;
-                      trackStatuses[key] = 'success';
-                      this.setState({ trackStatuses });
+      // If no results are found, change the status/icon and continue
+      if (searchResponse.items.length === 0) {
+        trackStatuses[i] = 'failed';
+        await this.setState({ trackStatuses });
+        return;
+      }
 
-                      if (key === tracklist.length - 1) {
-                        this.setState({
-                          inProgress: 'complete',
-                          playlistURL: `https://www.youtube.com/playlist?list=${playlistId}`,
-                        });
-                      }
-                      resolve();
-                    });
-                })
-                .catch((searchError) => {
-                  const { trackStatuses } = this.state;
-                  trackStatuses[key] = 'failed';
-                  this.setState({ trackStatuses });
-                  if (key === tracklist.length - 1) {
-                    this.setState({
-                      inProgress: 'complete',
-                      playlistURL: `https://www.youtube.com/playlist?list=${playlistId}`,
-                    });
-                  }
-                  resolve();
-                });
-            }));
-        });
-      });
+      // Otherwise, add the video to the playlist
+      const { videoId } = searchResponse.items[0].id;
+      await addVideoToPlaylist(playlistId, videoId);
+      trackStatuses[i] = 'success';
+      await this.setState({ trackStatuses });
+    });
+
+    // Once all tracks have been processed, make the playlist available to open
+    this.setState({
+      inProgress: 'complete',
+      playlistURL: `https://www.youtube.com/playlist?list=${playlistId}`,
+    });
   }
 
   button = () => {
