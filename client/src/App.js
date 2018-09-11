@@ -111,8 +111,8 @@ class App extends Component {
         <div className="search-box">
           <h1>WELCOME TO NTS MIX</h1>
           <SearchForm
-            gapiReady
-            isAuthorized
+            gapiReady={gapiReady}
+            isAuthorized={isAuthorized}
             updateMix={this.updateMix}
             updateError={this.updateError}
           />
