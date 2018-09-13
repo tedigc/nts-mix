@@ -24,9 +24,9 @@ class Mix extends Component {
     const playlistTitle = `${dj} - ${locationDate} | NTS Mix`;
 
     // Create the playlist and extract its ID
-    // const createResponse = await youtube.createPlaylist(playlistTitle, description);
-    // const playlistId = createResponse.id;
-    const playlistId = 'PLQ3YpXF4Wmw-KCQdRuG95gAQqEl_Y7C5d';
+    const createResponse = await youtube.createPlaylist(playlistTitle, description);
+    const playlistId = createResponse.id;
+    // const playlistId = 'PLQ3YpXF4Wmw-KCQdRuG95gAQqEl_Y7C5d';
 
     // Search for each track, and add it to the newly created playlist
     await asyncForEach(tracklist, async (track, i) => {

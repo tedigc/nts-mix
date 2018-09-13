@@ -162,7 +162,7 @@ button:disabled {
 .control-panel {
     position: fixed;
     position: 100,100;
-    color           : #FFFFFF;
+    color: #FFFFFF;
     background-color: #000000;
     padding: 20px;
     bottom: 20px;
@@ -197,4 +197,10 @@ button:disabled {
 
 .dark {
     color:    #777777;
+}
+
+.user-text {
+    color:    #777777;
+    margin-left: 20px;
+    font-size: 20px;
 }

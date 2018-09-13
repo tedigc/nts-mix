@@ -25,6 +25,7 @@ class App extends Component {
   state = {
     gapiReady: false,
     isAuthorized: false,
+    username: '',
     error: '',
     mix: {
       dj: '',
@@ -61,8 +62,9 @@ class App extends Component {
         GoogleAuth = gapi.auth2.getAuthInstance();
         GoogleAuth.isSignedIn.listen((isAuthorized) => { this.setState({ isAuthorized }); });
         const user = GoogleAuth.currentUser.get();
+        const username = user.w3.ig;
         const isAuthorized = user.hasGrantedScopes(SCOPE);
-        this.setState({ isAuthorized });
+        this.setState({ isAuthorized, username });
       })
       .catch((error) => {
         console.log(error);
@@ -99,7 +101,7 @@ class App extends Component {
   }
 
   render = () => {
-    const { isAuthorized, gapiReady } = this.state;
+    const { isAuthorized, gapiReady, username } = this.state;
     let loginText;
     if (gapiReady) loginText = (isAuthorized) ? 'LOG OUT' : 'LOG IN';
     else loginText = 'WAIT';
@@ -125,7 +127,8 @@ class App extends Component {
         {/* Control panel */}
         <div className="control-panel">
           <button className="outline" onClick={() => handleAuthClick() } disabled={!gapiReady}>{loginText}</button>
-          <button
+          { gapiReady && isAuthorized && <span className="user-text">Logged in as {username}</span>}
+          {/* <button
             className="outline"
             onClick={() => youtube.deleteAllPlaylists() }
             disabled={!gapiReady || !isAuthorized }
@@ -145,7 +148,7 @@ class App extends Component {
             disabled={!gapiReady || !isAuthorized}
             style={{ marginLeft: 10 }}>
             CLEAR
-          </button>
+          </button> */}
         </div>
 
       </div>
