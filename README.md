@@ -4,6 +4,14 @@ A web app for creating music playlists, webscraped from NTS mixes, and powered b
 
 [NTS Radio](https://www.nts.live/) is an online radio station based in London with studios in Los Angeles, Shanghai and Manchester. Broadcasting underground music live, 24/7.
 
+Below are some of my favourite mixes. To try them with the app, just follow the link and paste the URL into NTS mix, then hit "search".
+
+* [DJ Koze & Róisín Murphy - London, 04.05.18](https://www.nts.live/shows/guests/episodes/dj-koze-roisin-murphy-4th-may-2018)
+* [Floating Points & Four Tet - Live from Love International - Tisno, 06.08.18](https://www.nts.live/shows/love-international-2018/episodes/floating-points-four-tet-live-from-love-international-2nd-july-2018)
+* [Bonobo - Los Angeles, 24.06.15](https://www.nts.live/shows/bonobo/episodes/bonobo-24thjune-2015)
+
+---
+
 To get started:
 
 ```
