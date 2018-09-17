@@ -1,12 +1,11 @@
 /* global gapi */
 import React, { Component } from 'react';
-import SearchForm from './components/SearchForm';
-import Mix from './components/Mix';
-import './style/index.css';
-import youtube from './util/youtube';
+import SearchForm from '../components/SearchForm';
+import Mix from '../components/Mix';
+import '../style/index.css';
+import youtube from '../util/youtube';
+import config from '../config';
 
-const API_KEY = 'AIzaSyBkgrN0HMZWQzMxgkXMGw2F_ysxFUdDe9o'; // API key is restricted, so can be public.
-const CLIENT_ID = '859070380405-1fr4q5kqkkk460ccjianpi78kk14tqig.apps.googleusercontent.com';
 const SCOPE = 'https://www.googleapis.com/auth/youtube';
 const DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest'];
 
@@ -53,8 +52,8 @@ class App extends Component {
   // Initialise GAPI client and check the user's sign in status.
   initClient = () => {
     gapi.client.init({
-      apiKey: API_KEY,
-      clientId: CLIENT_ID,
+      apiKey: config.apiKey,
+      clientId: config.clientId,
       scope: 'https://www.googleapis.com/auth/youtube',
       discoveryDocs: DISCOVERY_DOCS,
     })
