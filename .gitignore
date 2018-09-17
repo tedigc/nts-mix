@@ -4,10 +4,7 @@ node_modules
 
 # client
 client/node_modules
-
-# server
-server/config.js
-server/client_secret.json
+client/src/config.js
 
 # OS
 *.DS_STORE
