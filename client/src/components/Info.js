@@ -36,7 +36,7 @@ class Info extends Component {
         {examples.map((example, i) => <CopyButton key={i} id={i} notifyCopy={this.notifyCopy} mix={example.mix} url={example.url} justCopied={justCopied[i]} />)}
 
         <p>
-          DISCLAIMER: NTS Radio is an underground radio station, meaning that certain uncommon or unreleased tracks will not be found, and instead close matches may be used when creating playlists.
+          DISCLAIMER: NTS Radio is an underground radio station, meaning that certain uncommon or unreleased tracks will not be found, and close matches may be used instead, when creating playlists.
         </p>
       </div>
     );

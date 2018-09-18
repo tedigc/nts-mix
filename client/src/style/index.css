@@ -225,7 +225,7 @@ button:disabled {
 }
 
 .info {
-    position: fixed;
+    position: absolute;
     width: 25%;
     color: #FFFFFF;
     background-color: #000000;
