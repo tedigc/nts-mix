@@ -7,6 +7,7 @@
     font-family: UniversCondensed;
     font-size: 16px;  
     font-size-adjust: 0.5;
+    overflow-y: visible;
 }
 
 h1 {
@@ -150,6 +151,24 @@ button:disabled {
     border-color: #777777;
 }
 
+
+.title {
+    /* margin: 0; */
+    display: inline-block;
+    vertical-align: middle;
+    display: inline-flex;
+    align-items: center; 
+}
+
+.info-button {
+    border: 1px solid #FFFFFF;
+    border-radius: 100%;
+    width:30px;
+    height:30px;
+    float: right;
+    margin-right: 30px;
+}
+
 .spinner {
     animation: spin 2s linear infinite;
 }
@@ -203,4 +222,65 @@ button:disabled {
     color:    #777777;
     margin-left: 20px;
     font-size: 20px;
+}
+
+.info {
+    position: fixed;
+    width: 25%;
+    color: #FFFFFF;
+    background-color: #000000;
+    padding: 40px;
+    right: 0px;
+    top: 0px;
+    margin-top: 100px;
+}
+
+p {
+    text-align: justify;
+    text-justify: inter-word;
+}
+
+a {
+    -moz-transition   : all .25s ease 0s;
+    -webkit-transition: all .25s ease 0s;
+    -o-transition     : all .25s ease 0s;
+}
+
+a:link {
+    color: white;
+    text-decoration: none;
+}
+
+a:visited {
+    color: white;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #777777;
+    text-decoration: none;
+}
+
+.copy-button {
+    padding-left: 10px;
+    color: #777777;
+    width: 100%;
+    text-align:left;
+}
+
+.copy-button:hover:enabled {
+    padding-left: 10px;
+    color: white;
+    background-color: #000000 !important;
+}
+
+.copy-button-text {
+    padding-left: 10px;
+}
+
+.copy-alert {
+    position: relative;
+    color: #777777;
+    text-transform: uppercase;
+    float: right;
 }

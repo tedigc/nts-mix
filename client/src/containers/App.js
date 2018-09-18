@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import SearchForm from '../components/SearchForm';
 import Mix from '../components/Mix';
+import Info from '../components/Info';
 import '../style/index.css';
 import youtube from '../util/youtube';
 import config from '../config';
@@ -110,7 +111,9 @@ class App extends Component {
 
         {/* NTS Search Form */}
         <div className="search-box">
-          <h1>WELCOME TO NTS MIX</h1>
+          <div className="title-wrapper">
+            <h1>WELCOME TO NTS MIX<button className="info-button"><i className="fas fa-info"></i></button></h1>
+          </div>
           <SearchForm
             gapiReady={gapiReady}
             isAuthorized={isAuthorized}
@@ -149,6 +152,8 @@ class App extends Component {
             CLEAR
           </button> */}
         </div>
+
+        <Info/>
 
       </div>
     );

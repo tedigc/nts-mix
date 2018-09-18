@@ -43,6 +43,7 @@
     "npm": "^6.4.1",
     "path": "^0.12.7",
     "react": "^16.1.0",
+    "react-copy-to-clipboard": "^5.0.1",
     "react-dom": "^16.1.0",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.3.1",
