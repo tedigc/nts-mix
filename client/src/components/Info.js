@@ -19,25 +19,27 @@ class Info extends Component {
     const { justCopied } = this.state;
     return (
       <div className="info">
-        <h1>ABOUT</h1>
-        <p>
-          <a href="https://www.nts.live/" target="_blank">NTS Radio</a> is an online radio station based in London with studios in Los Angeles, Shanghai and Manchester.
-          Broadcasting underground music live, 24/7.
-        </p>
-        <p>
-          NTS mix offers a way of turning your favourite mixes into YouTube playlists.
-          Simply log in, then copy and paste the URL of a mix found on <a href="https://www.nts.live/" target="_blank">nts.live</a>, search, and click "CREATE PLAYLIST".
-        </p>
+        <div className="info-inner-wrapper">
+          <h1>ABOUT</h1>
+          <p>
+            <a href="https://www.nts.live/" target="_blank">NTS Radio</a> is an online radio station based in London with studios in Los Angeles, Shanghai and Manchester.
+            Broadcasting underground music live, 24/7.
+          </p>
+          <p>
+            NTS mix offers a way of turning your favourite mixes into YouTube playlists.
+            Simply log in, then copy and paste the URL of a mix found on <a href="https://www.nts.live/" target="_blank">nts.live</a>, search, and click "CREATE PLAYLIST".
+          </p>
 
-        <p>
-          To get started, try some of the mixes below. Simply click the mix to copy it to your clipboard, and paste it into the search bar on the left.
-        </p>
+          <p>
+            To get started, try some of the mixes below. Simply click the mix to copy it to your clipboard, and paste it into the search bar on the left.
+          </p>
 
-        {examples.map((example, i) => <CopyButton key={i} id={i} notifyCopy={this.notifyCopy} mix={example.mix} url={example.url} justCopied={justCopied[i]} />)}
+          {examples.map((example, i) => <CopyButton key={i} id={i} notifyCopy={this.notifyCopy} mix={example.mix} url={example.url} justCopied={justCopied[i]} />)}
 
-        <p>
-          DISCLAIMER: NTS Radio is an underground radio station, meaning that certain uncommon or unreleased tracks will not be found, and close matches may be used instead.
-        </p>
+          <p>
+            DISCLAIMER: NTS Radio is an underground radio station, meaning that certain uncommon or unreleased tracks will not be found, and close matches may be used instead.
+          </p>
+        </div>
       </div>
     );
   }

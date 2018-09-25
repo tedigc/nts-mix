@@ -93,7 +93,7 @@ class App extends Component {
   content = () => {
     const { error, mix } = this.state;
     if (error) {
-      return <div className="mix-box"><h1>Something went wrong...</h1><div className="error">{error}</div></div>;
+      return <div className="mix-box"><div className="mix-box-inner-wrapper"><h1>Something went wrong...</h1><div className="error">{error}</div></div></div>;
     } else if (mix.dj.length === 0) {
       return '';
     }
@@ -111,16 +111,18 @@ class App extends Component {
 
         {/* NTS Search Form */}
         <div className="search-box">
-          <div className="title-wrapper">
-            <h1>WELCOME TO NTS MIX<button className="info-button"><i className="fas fa-info"></i></button></h1>
+          <div className="search-box-inner-wrapper">
+            <div className="title-wrapper">
+              <h1>WELCOME TO NTS MIX<button className="info-button"><i className="fas fa-info"></i></button></h1>
+            </div>
+            <SearchForm
+              gapiReady={gapiReady}
+              isAuthorized={isAuthorized}
+              updateMix={this.updateMix}
+              updateError={this.updateError}
+            />
+            <br/>
           </div>
-          <SearchForm
-            gapiReady={gapiReady}
-            isAuthorized={isAuthorized}
-            updateMix={this.updateMix}
-            updateError={this.updateError}
-          />
-          <br/>
         </div>
 
         {/* Tracklist or error message */}

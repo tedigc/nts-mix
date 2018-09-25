@@ -48,25 +48,39 @@ body {
 
 .search-box {
     background-color: #000000;
-    width : 540px;
+    /* width : 540px; */
+    width : 40%;
     height: auto;
     margin: auto;
     margin-top: 100px;
-    padding: 40px;
+    /* padding: 40px;
     padding-top: 30px;
+    padding-bottom: 36px; */
+}
+
+.search-box-inner-wrapper {
+    padding:40px;
+    padding-top:30px;
     padding-bottom: 36px;
 }
 
 .mix-box {
     background-color: #000000;
-    width : 540px;
+    /* width : 540px; */
+    width : 40%;
     height: auto;
     margin: auto;
     margin-top: 50px;
     margin-bottom: 100px;
-    padding: 40px;
+    /* padding: 40px;
     padding-top: 30px;
-    padding-bottom: 32px;
+    padding-bottom: 32px; */
+}
+
+.mix-box-inner-wrapper {
+    padding:40px;
+    padding-top:30px;
+    padding-bottom: 36px;
 }
 
 input {
@@ -229,10 +243,13 @@ button:disabled {
     width: 25%;
     color: #FFFFFF;
     background-color: #000000;
-    padding: 40px;
     right: 0px;
     top: 0px;
     margin-top: 100px;
+}
+
+.info-inner-wrapper {
+    padding: 40px;
 }
 
 p {

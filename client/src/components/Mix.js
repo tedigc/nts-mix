@@ -87,11 +87,13 @@ class Mix extends Component {
     const { dj, description, tracklist } = this.props;
     return (
       <div className="mix-box">
-        <h1>{dj.toUpperCase()}</h1>
-        <p>{description}</p>
-        <hr/>
-        {this.tracklist()}
-        {tracklist.length > 0 && this.button()}
+        <div className="mix-box-inner-wrapper">
+          <h1>{dj.toUpperCase()}</h1>
+          <p>{description}</p>
+          <hr/>
+          {this.tracklist()}
+          {tracklist.length > 0 && this.button()}
+        </div>
       </div>
     );
   }
