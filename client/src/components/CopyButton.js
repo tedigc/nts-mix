@@ -18,7 +18,7 @@ class CopyButton extends Component {
           <span className="copy-button-text">
             {mix}
           </span>
-          {justCopied && <span className="copy-alert">Copied to clipboard</span>}
+          {justCopied && <span className="copy-alert">Copied</span>}
         </button>
       </CopyToClipboard>
       </div>

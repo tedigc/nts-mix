@@ -26,17 +26,17 @@ class Info extends Component {
         </p>
         <p>
           NTS mix offers a way of turning your favourite mixes into YouTube playlists.
-          Simply copy and paste the URL of a mix found on <a href="https://www.nts.live/" target="_blank">nts.live</a>, search, and click "CREATE PLAYLIST".
+          Simply log in, then copy and paste the URL of a mix found on <a href="https://www.nts.live/" target="_blank">nts.live</a>, search, and click "CREATE PLAYLIST".
         </p>
 
         <p>
-          To get started, try some of the mixes below. Simply click the mix title to copy it to your clipboard, and past it into the search bar on the left.
+          To get started, try some of the mixes below. Simply click the mix to copy it to your clipboard, and paste it into the search bar on the left.
         </p>
 
         {examples.map((example, i) => <CopyButton key={i} id={i} notifyCopy={this.notifyCopy} mix={example.mix} url={example.url} justCopied={justCopied[i]} />)}
 
         <p>
-          DISCLAIMER: NTS Radio is an underground radio station, meaning that certain uncommon or unreleased tracks will not be found, and close matches may be used instead, when creating playlists.
+          DISCLAIMER: NTS Radio is an underground radio station, meaning that certain uncommon or unreleased tracks will not be found, and close matches may be used instead.
         </p>
       </div>
     );
