@@ -30,7 +30,7 @@ class Info extends Component {
         </p>
 
         <p>
-          To get started, try some of the mixes below. Simply click the mix title to copy it to your clipboard, and past it into the search bar on the left.
+          To get started, try some of the mixes below. Simply click the mix to copy it to your clipboard, and paste it into the search bar on the left.
         </p>
 
         {examples.map((example, i) => <CopyButton key={i} id={i} notifyCopy={this.notifyCopy} mix={example.mix} url={example.url} justCopied={justCopied[i]} />)}
