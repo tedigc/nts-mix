@@ -46,7 +46,7 @@ app.post('/api/nts/tracklist', (req, res) => {
  * Serve up the client side application
  */
 app.get('/*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../build/index.html'));
+  res.sendFile(path.join(__dirname, '../../client/build/index.html'));
 });
 
 // Set up server.
