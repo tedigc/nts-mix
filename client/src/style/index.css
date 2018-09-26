@@ -46,19 +46,25 @@ h2 {
     font-weight: bolder;
 }
 
-.info {
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #777;
+    margin: 1em 0;
+    padding: 0; 
+    margin-top:20px;
+    margin-bottom:20px;
+}
+
+.panel {
     color: #FFFFFF;
     background-color: #000000;
+    margin-bottom: 40px;
 }
 
-.info-inner-wrapper {
+.panel-inner-wrapper {
     padding: 40px;
-}
-
-.error {
-    color: #777777;
-    font-size: 18px;
-    margin-bottom: 10px;
 }
 
 .overlay {
@@ -70,29 +76,6 @@ h2 {
     top: 0px;
     left: 0px;
     background: rgba(0, 0, 0, 0.5);
-}
-
-.search-box {
-    background-color: #000000;
-    height: auto;
-}
-
-.search-box-inner-wrapper {
-    padding:40px;
-    padding-top:30px;
-    padding-bottom: 36px;
-}
-
-.mix-box {
-    background-color: #000000;
-    height: auto;
-    margin-top: 40px;
-}
-
-.mix-box-inner-wrapper {
-    padding:40px;
-    padding-top:30px;
-    padding-bottom: 36px;
 }
 
 input {
@@ -141,18 +124,6 @@ input:disabled {
     border-color: #777777;
 }
 
-.playlist-button-wrapper {
-    margin-top: 20px;
-    margin-bottom:50px;
-}
-
-.playlist-button {
-    float: right;
-    vertical-align: middle;
-    display: inline-flex;
-    align-items: center; 
-}
-
 button {
     color: #FFFFFF;
     background-color: #000000;
@@ -166,10 +137,10 @@ button {
     font-family: UniversCondensed;
     font-size: 16px;
     cursor: pointer;
+    font-weight: bolder;
 }
 
 button:hover:enabled {
-    font-weight: bolder;
     color: #777777;
 }
 
@@ -180,7 +151,6 @@ button:disabled {
 }
 
 .login-button {
-    font-weight: bolder;
     float: right;
     top:50%;
     transform: translate(0,50%);
@@ -194,6 +164,18 @@ button:disabled {
 
 .search-button {
     float: left;
+}
+
+.playlist-button-wrapper {
+    margin-top: 20px;
+    margin-bottom:50px;
+}
+
+.playlist-button {
+    float: right;
+    vertical-align: middle;
+    display: inline-flex;
+    align-items: center; 
 }
 
 .title {
@@ -291,6 +273,8 @@ a:hover {
 }
 
 .copy-alert {
+    font-family: UniversCondensed;
+    font-size: 16px;
     position: relative;
     color: #777777;
     text-transform: uppercase;

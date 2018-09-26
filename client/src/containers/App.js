@@ -93,7 +93,7 @@ class App extends Component {
   content = () => {
     const { error, mix } = this.state;
     if (error) {
-      return <div className="mix-box"><div className="mix-box-inner-wrapper"><h1>Something went wrong...</h1><div className="error">{error}</div></div></div>;
+      return <div className="panel"><div className="panel-inner-wrapper"><h1>Something went wrong...</h1><div className="dark">{error}</div></div></div>;
     } else if (mix.dj.length === 0) {
       return '';
     }
@@ -112,12 +112,12 @@ class App extends Component {
         <div className="row">
           <div className="col-6">
             {/* NTS Search Form */}
-            <div className="search-box">
-              <div className="search-box-inner-wrapper">
+            <div className="panel">
+              <div className="panel-inner-wrapper">
 
                 <div className="title-wrapper">
                   <h1 className="title">WELCOME TO NTS MIX</h1>
-                  <a><button className="login-button">LOG IN</button></a>
+                  <button className="login-button" onClick={() => handleAuthClick() } disabled={!gapiReady}>{loginText}</button>
                 </div>
 
                 <SearchForm
@@ -140,38 +140,35 @@ class App extends Component {
 
         </div>
 
-        <div className="row">
-          {/* Control panel */}
+        {/* <div className="row">
           <div className="col-6">
-          <div className="control-panel">
-            <button className="outline" onClick={() => handleAuthClick() } disabled={!gapiReady}>{loginText}</button>
-            { gapiReady && isAuthorized && <span className="login-text">Logged in as {username}</span>}
-            {/* <button
-              className="outline"
-              onClick={() => youtube.deleteAllPlaylists() }
-              disabled={!gapiReady || !isAuthorized }
-              style={{ marginLeft: 10 }}>
-              DELETE ALL PLAYLISTS
-            </button>
-            <button
-              className="outline"
-              onClick={() => youtube.listPlaylists() }
-              disabled={!gapiReady || !isAuthorized}
-              style={{ marginLeft: 10 }}>
-              LIST PLAYLISTS
-            </button>
-            <button
-              className="outline"
-              onClick={() => youtube.clearPlaylist('PLQ3YpXF4Wmw-KCQdRuG95gAQqEl_Y7C5d') }
-              disabled={!gapiReady || !isAuthorized}
-              style={{ marginLeft: 10 }}>
-              CLEAR
-            </button> */}
+            <div className="control-panel">
+              <button
+                className="outline"
+                onClick={() => youtube.deleteAllPlaylists() }
+                disabled={!gapiReady || !isAuthorized }
+                style={{ marginLeft: 10 }}>
+                DELETE ALL PLAYLISTS
+              </button>
+              <button
+                className="outline"
+                onClick={() => youtube.listPlaylists() }
+                disabled={!gapiReady || !isAuthorized}
+                style={{ marginLeft: 10 }}>
+                LIST PLAYLISTS
+              </button>
+              <button
+                className="outline"
+                onClick={() => youtube.clearPlaylist('PLQ3YpXF4Wmw-KCQdRuG95gAQqEl_Y7C5d') }
+                disabled={!gapiReady || !isAuthorized}
+                style={{ marginLeft: 10 }}>
+                CLEAR
+              </button>
 
+            </div>
           </div>
-          </div>
+        </div> */}
 
-        </div>
       </div>
     );
   }

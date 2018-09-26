@@ -86,8 +86,8 @@ class Mix extends Component {
   render() {
     const { dj, description, tracklist } = this.props;
     return (
-      <div className="mix-box">
-        <div className="mix-box-inner-wrapper">
+      <div className="panel">
+        <div className="panel-inner-wrapper">
           <h1>{dj.toUpperCase()}</h1>
           <p>{description}</p>
           <hr/>

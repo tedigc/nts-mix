@@ -18,8 +18,8 @@ class Info extends Component {
   render() {
     const { justCopied } = this.state;
     return (
-      <div className="info">
-        <div className="info-inner-wrapper">
+      <div className="panel">
+        <div className="panel-inner-wrapper">
           <h1>ABOUT</h1>
           <p>
             <a href="https://www.nts.live/" target="_blank">NTS Radio</a> is an online radio station based in London with studios in Los Angeles, Shanghai and Manchester.
