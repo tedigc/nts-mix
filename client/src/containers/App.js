@@ -109,54 +109,69 @@ class App extends Component {
     return (
       <div className="overlay">
 
-        {/* NTS Search Form */}
-        <div className="search-box">
-          <div className="search-box-inner-wrapper">
-            <div className="title-wrapper">
-              <h1>WELCOME TO NTS MIX<button className="info-button"><i className="fas fa-info"></i></button></h1>
+        <div className="row">
+          <div className="col-6">
+            {/* NTS Search Form */}
+            <div className="search-box">
+              <div className="search-box-inner-wrapper">
+
+                <div className="title-wrapper">
+                  <h1 className="title">WELCOME TO NTS MIX</h1>
+                  <a><button className="login-button">LOG IN</button></a>
+                </div>
+
+                <SearchForm
+                  gapiReady={gapiReady}
+                  isAuthorized={isAuthorized}
+                  updateMix={this.updateMix}
+                  updateError={this.updateError}
+                />
+                <br/>
+              </div>
             </div>
-            <SearchForm
-              gapiReady={gapiReady}
-              isAuthorized={isAuthorized}
-              updateMix={this.updateMix}
-              updateError={this.updateError}
-            />
-            <br/>
+
+            {/* Tracklist or error message */}
+            {this.content()}
           </div>
+
+          <div className="col-6">
+            <Info/>
+          </div>
+
         </div>
 
-        {/* Tracklist or error message */}
-        {this.content()}
+        <div className="row">
+          {/* Control panel */}
+          <div className="col-6">
+          <div className="control-panel">
+            <button className="outline" onClick={() => handleAuthClick() } disabled={!gapiReady}>{loginText}</button>
+            { gapiReady && isAuthorized && <span className="login-text">Logged in as {username}</span>}
+            {/* <button
+              className="outline"
+              onClick={() => youtube.deleteAllPlaylists() }
+              disabled={!gapiReady || !isAuthorized }
+              style={{ marginLeft: 10 }}>
+              DELETE ALL PLAYLISTS
+            </button>
+            <button
+              className="outline"
+              onClick={() => youtube.listPlaylists() }
+              disabled={!gapiReady || !isAuthorized}
+              style={{ marginLeft: 10 }}>
+              LIST PLAYLISTS
+            </button>
+            <button
+              className="outline"
+              onClick={() => youtube.clearPlaylist('PLQ3YpXF4Wmw-KCQdRuG95gAQqEl_Y7C5d') }
+              disabled={!gapiReady || !isAuthorized}
+              style={{ marginLeft: 10 }}>
+              CLEAR
+            </button> */}
 
-        {/* Control panel */}
-        <div className="control-panel">
-          <button className="outline" onClick={() => handleAuthClick() } disabled={!gapiReady}>{loginText}</button>
-          { gapiReady && isAuthorized && <span className="user-text">Logged in as {username}</span>}
-          {/* <button
-            className="outline"
-            onClick={() => youtube.deleteAllPlaylists() }
-            disabled={!gapiReady || !isAuthorized }
-            style={{ marginLeft: 10 }}>
-            DELETE ALL PLAYLISTS
-          </button>
-          <button
-            className="outline"
-            onClick={() => youtube.listPlaylists() }
-            disabled={!gapiReady || !isAuthorized}
-            style={{ marginLeft: 10 }}>
-            LIST PLAYLISTS
-          </button>
-          <button
-            className="outline"
-            onClick={() => youtube.clearPlaylist('PLQ3YpXF4Wmw-KCQdRuG95gAQqEl_Y7C5d') }
-            disabled={!gapiReady || !isAuthorized}
-            style={{ marginLeft: 10 }}>
-            CLEAR
-          </button> */}
+          </div>
+          </div>
+
         </div>
-
-        <Info/>
-
       </div>
     );
   }
