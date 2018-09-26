@@ -24,35 +24,35 @@ class Mix extends Component {
     const playlistTitle = `${dj} - ${locationDate} | NTS Mix`;
 
     // Create the playlist and extract its ID
-    // const createResponse = await youtube.createPlaylist(playlistTitle, description);
-    // const playlistId = createResponse.id;
-    // // const playlistId = 'PLQ3YpXF4Wmw-KCQdRuG95gAQqEl_Y7C5d';
+    const createResponse = await youtube.createPlaylist(playlistTitle, description);
+    const playlistId = createResponse.id;
+    // const playlistId = 'PLQ3YpXF4Wmw-KCQdRuG95gAQqEl_Y7C5d';
 
-    // // Search for each track, and add it to the newly created playlist
-    // await asyncForEach(tracklist, async (track, i) => {
-    //   const { trackStatuses } = this.state;
-    //   const searchQuery = `${track.artist} - ${track.title}`;
-    //   const searchResponse = await youtube.searchForVideo(searchQuery);
+    // Search for each track, and add it to the newly created playlist
+    await asyncForEach(tracklist, async (track, i) => {
+      const { trackStatuses } = this.state;
+      const searchQuery = `${track.artist} - ${track.title}`;
+      const searchResponse = await youtube.searchForVideo(searchQuery);
 
-    //   // If no results are found, change the status/icon and process the next track
-    //   if (searchResponse.items.length === 0) {
-    //     trackStatuses[i] = 'failed';
-    //     await this.setState({ trackStatuses });
-    //     return;
-    //   }
+      // If no results are found, change the status/icon and process the next track
+      if (searchResponse.items.length === 0) {
+        trackStatuses[i] = 'failed';
+        await this.setState({ trackStatuses });
+        return;
+      }
 
-    //   // Otherwise, add the video to the playlist
-    //   const { videoId } = searchResponse.items[0].id;
-    //   await youtube.addVideoToPlaylist(playlistId, videoId);
-    //   trackStatuses[i] = 'success';
-    //   await this.setState({ trackStatuses });
-    // });
+      // Otherwise, add the video to the playlist
+      const { videoId } = searchResponse.items[0].id;
+      await youtube.addVideoToPlaylist(playlistId, videoId);
+      trackStatuses[i] = 'success';
+      await this.setState({ trackStatuses });
+    });
 
-    // // Once all tracks have been processed, make the playlist available to open
-    // this.setState({
-    //   inProgress: 'complete',
-    //   playlistURL: `https://www.youtube.com/playlist?list=${playlistId}`,
-    // });
+    // Once all tracks have been processed, make the playlist available to open
+    this.setState({
+      inProgress: 'complete',
+      playlistURL: `https://www.youtube.com/playlist?list=${playlistId}`,
+    });
   }
 
   button = () => {

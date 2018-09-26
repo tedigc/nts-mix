@@ -23,10 +23,7 @@ class Info extends Component {
           <h1>ABOUT</h1>
           <p>
             <a href="https://www.nts.live/" target="_blank">NTS Radio</a> is an online radio station based in London with studios in Los Angeles, Shanghai and Manchester.
-            Broadcasting underground music live, 24/7.
-          </p>
-          <p>
-            NTS mix offers a way of turning your favourite mixes into YouTube playlists.
+            Broadcasting underground music live, 24/7. NTS mix offers a way of turning your favourite mixes into YouTube playlists.
             Simply log in, then copy and paste the URL of a mix found on <a href="https://www.nts.live/" target="_blank">nts.live</a>, search, and click "CREATE PLAYLIST".
           </p>
 

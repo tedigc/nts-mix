@@ -101,7 +101,7 @@ class App extends Component {
   }
 
   render = () => {
-    const { isAuthorized, gapiReady, username } = this.state;
+    const { isAuthorized, gapiReady } = this.state;
     let loginText;
     if (gapiReady) loginText = (isAuthorized) ? 'LOG OUT' : 'LOG IN';
     else loginText = 'WAIT';
@@ -109,36 +109,41 @@ class App extends Component {
     return (
       <div className="overlay">
 
-        <div className="row">
-          <div className="col-6">
-            {/* NTS Search Form */}
-            <div className="panel">
-              <div className="panel-inner-wrapper">
+        <div className="container">
+          <div className="row">
+            <div className="col-12">
+              {/* NTS Search Form */}
+              <div className="panel">
+                <div className="panel-inner-wrapper">
 
-                <div className="title-wrapper">
-                  <h1 className="title">WELCOME TO NTS MIX</h1>
-                  <button className="login-button" onClick={() => handleAuthClick() } disabled={!gapiReady}>{loginText}</button>
+                  <div className="title-wrapper">
+                    <h1 className="title">WELCOME TO NTS MIX</h1>
+                    <button className="login-button" onClick={() => handleAuthClick() } disabled={!gapiReady}>{loginText}</button>
+                  </div>
+
+                  <SearchForm
+                    gapiReady={gapiReady}
+                    isAuthorized={isAuthorized}
+                    updateMix={this.updateMix}
+                    updateError={this.updateError}
+                  />
+                  <br/>
                 </div>
-
-                <SearchForm
-                  gapiReady={gapiReady}
-                  isAuthorized={isAuthorized}
-                  updateMix={this.updateMix}
-                  updateError={this.updateError}
-                />
-                <br/>
               </div>
+
+              {/* Tracklist or error message */}
+              {this.content()}
+
+              <Info/>
+
             </div>
 
-            {/* Tracklist or error message */}
-            {this.content()}
-          </div>
+            {/* <div className="col-6">
+            </div> */}
 
-          <div className="col-6">
-            <Info/>
           </div>
-
         </div>
+
 
         {/* <div className="row">
           <div className="col-6">
