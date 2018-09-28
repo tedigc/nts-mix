@@ -10,14 +10,11 @@
     "i": "^0.3.6",
     "npm": "^6.4.1",
     "prop-types": "^15.6.0",
-    "react": "^16.1.0",
+    "react": "^16.5.2",
     "react-copy-to-clipboard": "^5.0.1",
-    "react-dom": "^16.1.0",
+    "react-dom": "^16.5.2",
     "react-font-face": "^0.2.1",
-    "react-router": "^4.2.0",
-    "react-router-dom": "^4.3.1",
-    "react-scripts": "^1.1.5",
-    "react-transition-group": "^2.2.1"
+    "react-scripts": "^1.1.5"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -3,13 +3,13 @@ import React, { Component } from 'react';
 import SearchForm from '../components/SearchForm';
 import Mix from '../components/Mix';
 import Info from '../components/Info';
+import AuthContext from '../contexts/AuthContext';
 import '../style/index.css';
 import youtube from '../util/youtube';
 import config from '../config';
 
 const SCOPE = 'https://www.googleapis.com/auth/youtube';
 const DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest'];
-
 let GoogleAuth;
 
 // Log in or out.
@@ -52,6 +52,7 @@ class App extends Component {
 
   // Initialise GAPI client and check the user's sign in status.
   initClient = () => {
+    const { gapiReady } = this.state;
     gapi.client.init({
       apiKey: config.apiKey,
       clientId: config.clientId,
@@ -108,42 +109,39 @@ class App extends Component {
 
     return (
       <div className="overlay">
+        <AuthContext.Provider value={{ isAuthorized, gapiReady }}>
 
-        <div className="container">
-          <div className="row">
-            <div className="col-12">
-              {/* NTS Search Form */}
-              <div className="panel">
-                <div className="panel-inner-wrapper">
+          <div className="container">
+            <div className="row">
+              <div className="col-12">
+                {/* NTS Search Form */}
+                <div className="panel">
+                  <div className="panel-inner-wrapper">
 
-                  <div className="title-wrapper">
-                    <h1 className="title">WELCOME TO NTS MIX</h1>
-                    <button className="login-button" onClick={() => handleAuthClick() } disabled={!gapiReady}>{loginText}</button>
+                    <div className="title-wrapper">
+                      <h1 className="title">WELCOME TO NTS MIX</h1>
+                      <button className="login-button" onClick={() => handleAuthClick() } disabled={!gapiReady}>{loginText}</button>
+                    </div>
+
+                    <SearchForm
+                      gapiReady={gapiReady}
+                      isAuthorized={isAuthorized}
+                      updateMix={this.updateMix}
+                      updateError={this.updateError}
+                    />
+                    <br/>
                   </div>
-
-                  <SearchForm
-                    gapiReady={gapiReady}
-                    isAuthorized={isAuthorized}
-                    updateMix={this.updateMix}
-                    updateError={this.updateError}
-                  />
-                  <br/>
                 </div>
+
+                {/* Tracklist or error message */}
+                {this.content()}
+
+                <Info/>
+
               </div>
 
-              {/* Tracklist or error message */}
-              {this.content()}
-
-              <Info/>
-
             </div>
-
-            {/* <div className="col-6">
-            </div> */}
-
           </div>
-        </div>
-
 
         {/* <div className="row">
           <div className="col-6">
@@ -173,7 +171,7 @@ class App extends Component {
             </div>
           </div>
         </div> */}
-
+        </AuthContext.Provider>
       </div>
     );
   }
