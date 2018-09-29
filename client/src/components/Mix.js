@@ -4,6 +4,7 @@ import Track from './Track';
 import AuthContext from '../contexts/AuthContext';
 import youtube from '../util/youtube';
 import asyncForEach from '../util/async';
+import { logInOut } from '../util/auth';
 
 class Mix extends Component {
   constructor(props) {
@@ -63,7 +64,7 @@ class Mix extends Component {
       case 'complete': return <div className="playlist-button-wrapper"><button className="playlist-button" onClick={this.openPlaylist}><i className="fas fa-external-link-alt"></i> &nbsp; OPEN </button></div>;
       default:
         if (isAuthorized && gapiReady) return <div className="playlist-button-wrapper"><button className="playlist-button" onClick={this.createPlaylist}><i className="far fa-plus-square"></i> &nbsp; CREATE PLAYLIST </button></div>;
-        return <div className="playlist-button-wrapper"><button className="playlist-button" disabled ><i class="fas fa-user"></i> &nbsp; LOG IN TO CREATE PLAYLIST </button></div>;
+        return <div className="playlist-button-wrapper"><button className="playlist-button" onClick={logInOut} ><i class="fas fa-user"></i> &nbsp; LOG IN TO CREATE PLAYLIST </button></div>;
     }
   }
 

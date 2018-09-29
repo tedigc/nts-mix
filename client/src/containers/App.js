@@ -5,21 +5,9 @@ import Mix from '../components/Mix';
 import Info from '../components/Info';
 import AuthContext from '../contexts/AuthContext';
 import '../style/index.css';
-import config from '../config';
+import { initClient, logInOut } from '../util/auth';
+
 // import youtube from '../util/youtube';
-
-const SCOPE = 'https://www.googleapis.com/auth/youtube';
-const DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest'];
-let GoogleAuth;
-
-// Log in or out.
-function handleAuthClick() {
-  if (GoogleAuth.isSignedIn.get()) {
-    GoogleAuth.signOut();
-  } else {
-    GoogleAuth.signIn();
-  }
-}
 
 class App extends Component {
   state = {
@@ -37,38 +25,18 @@ class App extends Component {
   };
 
   componentWillMount = () => {
-    this.loadYoutubeAPI();
-  }
-
-  loadYoutubeAPI = () => {
+    // Load the YouTube API
     const script = document.createElement('script');
     script.src = 'https://apis.google.com/js/api.js';
     script.onload = () => {
       this.setState({ gapiReady: true });
-      gapi.load('client:auth2', this.initClient);
+      gapi.load('client:auth2', initClient.bind(null, this.setAuth));
     };
     document.body.appendChild(script);
   }
 
-  // Initialise GAPI client and check the user's sign in status.
-  initClient = () => {
-    gapi.client.init({
-      apiKey: config.apiKey,
-      clientId: config.clientId,
-      scope: 'https://www.googleapis.com/auth/youtube',
-      discoveryDocs: DISCOVERY_DOCS,
-    })
-      .then(() => {
-        GoogleAuth = gapi.auth2.getAuthInstance();
-        GoogleAuth.isSignedIn.listen((isAuthorized) => { this.setState({ isAuthorized }); });
-        const user = GoogleAuth.currentUser.get();
-        const username = user.w3.ig;
-        const isAuthorized = user.hasGrantedScopes(SCOPE);
-        this.setState({ isAuthorized, username });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  setAuth = (isAuthorized) => {
+    this.setState({ isAuthorized });
   }
 
   updateMix = (mix) => {
@@ -108,7 +76,7 @@ class App extends Component {
 
     return (
       <div className="overlay">
-        <AuthContext.Provider value={{ isAuthorized, gapiReady }}>
+        <AuthContext.Provider value={{ isAuthorized, gapiReady, setAuth: this.setAuth }}>
 
           <div className="container">
             <div className="row">
@@ -119,7 +87,7 @@ class App extends Component {
 
                     <div className="title-wrapper">
                       <h1 className="title">WELCOME TO NTS MIX</h1>
-                      <button className="login-button" onClick={() => handleAuthClick() } disabled={!gapiReady}>{loginText}</button>
+                      <button className="login-button" onClick={() => logInOut() } disabled={!gapiReady}>{loginText}</button>
                     </div>
 
                     <SearchForm
@@ -136,7 +104,6 @@ class App extends Component {
                 <Info/>
 
               </div>
-
             </div>
           </div>
 
