@@ -7,6 +7,9 @@ import asyncForEach from '../util/async';
 import { logInOut } from '../util/auth';
 
 class Mix extends Component {
+  /**
+   * Initialise empty arrays within state based the tracklist length
+   */
   constructor(props) {
     super(props);
     this.state = {
@@ -17,6 +20,9 @@ class Mix extends Component {
     };
   }
 
+  /**
+   * Create a new YouTube playlist, and populate it with the first search result for each track
+   */
   createPlaylist = async () => {
     await this.setState({
       inProgress: 'searching',
@@ -57,6 +63,9 @@ class Mix extends Component {
     });
   }
 
+  /**
+   * Generate a context sensitive button depending on state
+   */
   button = (isAuthorized, gapiReady) => {
     const { inProgress } = this.state;
     switch (inProgress) {
@@ -68,11 +77,17 @@ class Mix extends Component {
     }
   }
 
+  /**
+   * Open the created playlist in a new tab
+   */
   openPlaylist = () => {
     const win = window.open(this.state.playlistURL, '_blank');
     win.focus();
   }
 
+  /**
+   * Generate a collection of track components
+   */
   tracklist() {
     const { trackMessages, trackStatuses } = this.state;
     const { tracklist } = this.props;

@@ -5,6 +5,10 @@ const SCOPE = 'https://www.googleapis.com/auth/youtube';
 const DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest'];
 let GoogleAuth;
 
+/**
+ * Initialise the API client
+ * 'setAuth' is a callback function used to set authorisation state within a react context
+ */
 export function initClient(setAuth) {
   gapi.client.init({
     apiKey: config.apiKey,
@@ -24,7 +28,9 @@ export function initClient(setAuth) {
     });
 }
 
-// Log in or out.
+/**
+ * Log in or out, depending on state
+ */
 export function logInOut() {
   if (GoogleAuth.isSignedIn.get()) {
     GoogleAuth.signOut();

@@ -10,6 +10,10 @@ const examples = [
 class Info extends Component {
   state = { justCopied: Array(examples.length).fill(false) }
 
+  /**
+   * Called by a child component, this is called when an example mix is copied
+   * This is used to identify which example mix was copied most recently
+   */
   notifyCopy = async (id) => {
     const justCopied = await this.state.justCopied.map((item, i) => (i === id));
     this.setState({ justCopied });

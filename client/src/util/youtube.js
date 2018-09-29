@@ -74,7 +74,7 @@ async function createPlaylist(title, description) {
 
 /**
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * TODO delete everything below
+ * TODO delete everything below. These were used for development
  */
 
 /**

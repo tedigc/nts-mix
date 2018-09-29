@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
 class CopyButton extends Component {
+  /**
+   * Update state in the parent component, notifying that this item was most recently copied
+   */
   onClick = () => {
     const { id } = this.props;
     this.props.notifyCopy(id);

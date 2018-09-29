@@ -24,8 +24,10 @@ class App extends Component {
     playlistId: '',
   };
 
+  /**
+   * Load the YouTubeAPI before the component mounts
+   */
   componentWillMount = () => {
-    // Load the YouTube API
     const script = document.createElement('script');
     script.src = 'https://apis.google.com/js/api.js';
     script.onload = () => {
@@ -39,6 +41,9 @@ class App extends Component {
     this.setState({ isAuthorized });
   }
 
+  /**
+   * Remove the error message and update the mix info
+   */
   updateMix = (mix) => {
     this.setState({
       mix,
@@ -46,6 +51,9 @@ class App extends Component {
     });
   }
 
+  /**
+   * Remove mix info and update the error message.
+   */
   updateError = (error) => {
     this.setState({
       error,
@@ -58,6 +66,9 @@ class App extends Component {
     });
   }
 
+  /**
+   * Produce either an error message or a mix panel
+   */
   content = () => {
     const { error, mix } = this.state;
     if (error) {
@@ -101,6 +112,7 @@ class App extends Component {
                 {/* Tracklist or error message */}
                 {this.content()}
 
+                {/* Info panel */}
                 <Info/>
 
               </div>
