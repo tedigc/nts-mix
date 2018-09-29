@@ -32,7 +32,6 @@ class SearchForm extends Component {
   // Returns a context-sensitive search button
   searchButton = () => {
     const { searching } = this.state;
-    const { isAuthorized, gapiReady } = this.props;
     if (searching) {
       return (
         <button className="search-button" disabled={true}>
@@ -41,7 +40,7 @@ class SearchForm extends Component {
       );
     }
     return (
-      <button className="search-button" disabled={!gapiReady || !isAuthorized}>
+      <button className="search-button">
         <i className="fas fa-search"></i>
       </button>
     );
@@ -57,8 +56,6 @@ class SearchForm extends Component {
 
   render() {
     const { searching, url } = this.state;
-    const { isAuthorized, gapiReady } = this.props;
-    const placeholderText = (isAuthorized) ? 'Paste an NTS mix URL here...' : 'Please log in to continue';
     return (
       <form onSubmit={this.searchForTracklist}>
         {this.searchButton()}
@@ -67,8 +64,8 @@ class SearchForm extends Component {
             type="text"
             name="search-input"
             value={url}
-            placeholder={placeholderText}
-            disabled={!gapiReady || !isAuthorized || searching}
+            placeholder='Paste an NTS mix URL here...'
+            disabled={searching}
             onChange={this.handleChange}
           />
         </div>
@@ -77,9 +74,5 @@ class SearchForm extends Component {
   }
 }
 
-SearchForm.propTypes = {
-  isAuthorized: PropTypes.bool.isRequired,
-  gapiReady: PropTypes.bool.isRequired,
-  updateMix: PropTypes.func.isRequired,
-};
+SearchForm.propTypes = { updateMix: PropTypes.func.isRequired };
 export default SearchForm;

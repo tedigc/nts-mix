@@ -5,8 +5,8 @@ import Mix from '../components/Mix';
 import Info from '../components/Info';
 import AuthContext from '../contexts/AuthContext';
 import '../style/index.css';
-import youtube from '../util/youtube';
 import config from '../config';
+// import youtube from '../util/youtube';
 
 const SCOPE = 'https://www.googleapis.com/auth/youtube';
 const DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest'];
@@ -52,7 +52,6 @@ class App extends Component {
 
   // Initialise GAPI client and check the user's sign in status.
   initClient = () => {
-    const { gapiReady } = this.state;
     gapi.client.init({
       apiKey: config.apiKey,
       clientId: config.clientId,
@@ -124,8 +123,6 @@ class App extends Component {
                     </div>
 
                     <SearchForm
-                      gapiReady={gapiReady}
-                      isAuthorized={isAuthorized}
                       updateMix={this.updateMix}
                       updateError={this.updateError}
                     />
