@@ -1,5 +1,5 @@
 /* global gapi */
-const DO_NOT_DELETE = ['PLQ3YpXF4Wmw-KCQdRuG95gAQqEl_Y7C5d', 'PLQ3YpXF4Wmw8jQkdCTowULP-pmUGMP590']; // Playlist ID. doesn't really matter if this goes public.
+const DO_NOT_DELETE = ['PLQ3YpXF4Wmw-KCQdRuG95gAQqEl_Y7C5d', 'PLQ3YpXF4Wmw8jQkdCTowULP-pmUGMP590', 'PLQ3YpXF4Wmw_htsZw_8zCLthjzDk8FU7F']; // Playlist ID. doesn't really matter if this goes public.
 const has = Object.prototype.hasOwnProperty;
 
 /**

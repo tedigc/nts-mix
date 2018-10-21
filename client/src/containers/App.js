@@ -7,7 +7,7 @@ import AuthContext from '../contexts/AuthContext';
 import '../style/index.css';
 import { initClient, logInOut } from '../util/auth';
 
-// import youtube from '../util/youtube';
+import youtube from '../util/youtube';
 
 class App extends Component {
   state = {
@@ -147,6 +147,7 @@ class App extends Component {
             </div>
           </div>
         </div> */}
+
         </AuthContext.Provider>
       </div>
     );
