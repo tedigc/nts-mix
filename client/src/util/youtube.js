@@ -1,5 +1,9 @@
 /* global gapi */
-const DO_NOT_DELETE = ['PLQ3YpXF4Wmw-KCQdRuG95gAQqEl_Y7C5d', 'PLQ3YpXF4Wmw8jQkdCTowULP-pmUGMP590', 'PLQ3YpXF4Wmw_htsZw_8zCLthjzDk8FU7F']; // Playlist ID. doesn't really matter if this goes public.
+const DO_NOT_DELETE = [
+  "PLQ3YpXF4Wmw-KCQdRuG95gAQqEl_Y7C5d",
+  "PLQ3YpXF4Wmw8jQkdCTowULP-pmUGMP590",
+  "PLQ3YpXF4Wmw_htsZw_8zCLthjzDk8FU7F"
+]; // Playlist ID. doesn't really matter if this goes public.
 const has = Object.prototype.hasOwnProperty;
 
 /**
@@ -7,14 +11,14 @@ const has = Object.prototype.hasOwnProperty;
  */
 async function searchForVideo(searchQuery) {
   const parameters = {
-    part: 'snippet',
+    part: "snippet",
     maxResults: 5,
-    order: 'relevance',
-    q: searchQuery,
+    order: "relevance",
+    q: searchQuery
   };
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     const request = gapi.client.youtube.search.list(parameters);
-    request.execute((response) => {
+    request.execute(response => {
       // if (response.items.length === 0) reject(new Error('No results found'));
       resolve(response);
     });
@@ -26,18 +30,18 @@ async function searchForVideo(searchQuery) {
  */
 async function addVideoToPlaylist(playlistId, videoId) {
   const parameters = {
-    part: 'snippet',
+    part: "snippet",
     snippet: {
       playlistId,
       resourceId: {
-        kind: 'youtube#video',
-        videoId,
-      },
-    },
+        kind: "youtube#video",
+        videoId
+      }
+    }
   };
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     const request = gapi.client.youtube.playlistItems.insert(parameters);
-    request.execute((response) => {
+    request.execute(response => {
       // TODO handle errors here
       resolve(response);
     });
@@ -50,21 +54,21 @@ async function addVideoToPlaylist(playlistId, videoId) {
 async function createPlaylist(title, description) {
   // Set up request parameters
   const parameters = {
-    part: 'snippet, status',
+    part: "snippet, status",
     resource: {
       snippet: {
         title,
-        description,
+        description
       },
-      status: { privacyStatus: 'private' },
-    },
+      status: { privacyStatus: "private" }
+    }
   };
 
   // Execute request.
   const request = gapi.client.youtube.playlists.insert(parameters);
   return new Promise((resolve, reject) => {
-    request.execute((response) => {
-      if (response && has.call(response, 'error')) {
+    request.execute(response => {
+      if (response && has.call(response, "error")) {
         reject(response.error);
       }
       resolve(response);
@@ -82,16 +86,16 @@ async function createPlaylist(title, description) {
  */
 function listPlaylists() {
   const parameters = {
-    part: 'snippet',
+    part: "snippet",
     mine: true,
-    maxResults: 50,
+    maxResults: 50
   };
 
   const request = gapi.client.youtube.playlists.list(parameters);
-  request.execute((response) => {
+  request.execute(response => {
     console.log();
-    console.log('Playlists:');
-    response.items.forEach((playlist) => {
+    console.log("Playlists:");
+    response.items.forEach(playlist => {
       console.log(`  ${playlist.snippet.title} ... ${playlist.id}`);
     });
     console.log();
@@ -104,24 +108,28 @@ function listPlaylists() {
 async function clearPlaylist(playlistId) {
   const parameters = {
     playlistId,
-    part: 'snippet',
-    maxResults: 50,
+    part: "snippet",
+    maxResults: 50
   };
   console.log();
   console.log(`Clearing playlist ${playlistId}`);
   const listRequest = gapi.client.youtube.playlistItems.list(parameters);
-  listRequest.execute((response) => {
+  listRequest.execute(response => {
     let sequence = Promise.resolve();
-    response.items.forEach((video) => {
-      sequence = sequence.then(() =>
-        new Promise((resolve) => {
-          const delParameters = { id: video.id };
-          const delRequest = gapi.client.youtube.playlistItems.delete(delParameters);
-          delRequest.execute(() => {
-            console.log(`  Successfully deleted ${video.snippet.title}`);
-            resolve();
-          });
-        }));
+    response.items.forEach(video => {
+      sequence = sequence.then(
+        () =>
+          new Promise(resolve => {
+            const delParameters = { id: video.id };
+            const delRequest = gapi.client.youtube.playlistItems.delete(
+              delParameters
+            );
+            delRequest.execute(() => {
+              console.log(`  Successfully deleted ${video.snippet.title}`);
+              resolve();
+            });
+          })
+      );
     });
   });
 }
@@ -131,7 +139,7 @@ async function clearPlaylist(playlistId) {
  */
 function deletePlaylist(playlistId) {
   const request = gapi.client.youtube.playlists.delete({ id: playlistId });
-  request.execute((res) => {
+  request.execute(res => {
     console.log(res);
   });
 }
@@ -141,16 +149,16 @@ function deletePlaylist(playlistId) {
  */
 function deleteAllPlaylists() {
   const parameters = {
-    part: 'snippet',
+    part: "snippet",
     mine: true,
-    maxResults: 50,
+    maxResults: 50
   };
 
   const request = gapi.client.youtube.playlists.list(parameters);
-  request.execute((res) => {
+  request.execute(res => {
     console.log();
-    console.log('Deleting playlists:');
-    res.items.forEach((playlist) => {
+    console.log("Deleting playlists:");
+    res.items.forEach(playlist => {
       if (DO_NOT_DELETE.indexOf(playlist.id) < 0) {
         console.log(`  Deleting '${playlist.snippet.title}' - ${playlist.id}`);
         deletePlaylist(playlist.id);
@@ -167,5 +175,5 @@ export default {
   listPlaylists,
   clearPlaylist,
   deletePlaylist,
-  deleteAllPlaylists,
+  deleteAllPlaylists
 };

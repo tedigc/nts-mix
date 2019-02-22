@@ -1,8 +1,10 @@
 /* global gapi */
-import config from '../config';
+import config from "../config";
 
-const SCOPE = 'https://www.googleapis.com/auth/youtube';
-const DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest'];
+const SCOPE = "https://www.googleapis.com/auth/youtube";
+const DISCOVERY_DOCS = [
+  "https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest"
+];
 let GoogleAuth;
 
 /**
@@ -10,12 +12,13 @@ let GoogleAuth;
  * 'setAuth' is a callback function used to set authorisation state within a react context
  */
 export function initClient(setAuth) {
-  gapi.client.init({
-    apiKey: config.apiKey,
-    clientId: config.clientId,
-    scope: SCOPE,
-    discoveryDocs: DISCOVERY_DOCS,
-  })
+  gapi.client
+    .init({
+      apiKey: config.apiKey,
+      clientId: config.clientId,
+      scope: SCOPE,
+      discoveryDocs: DISCOVERY_DOCS
+    })
     .then(() => {
       GoogleAuth = gapi.auth2.getAuthInstance();
       GoogleAuth.isSignedIn.listen(isAuthorized => setAuth(isAuthorized));
@@ -23,7 +26,7 @@ export function initClient(setAuth) {
       const isAuthorized = user.hasGrantedScopes(SCOPE);
       setAuth(isAuthorized);
     })
-    .catch((error) => {
+    .catch(error => {
       console.log(error);
     });
 }

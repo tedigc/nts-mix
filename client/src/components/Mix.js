@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Track from './Track';
-import AuthContext from '../contexts/AuthContext';
-import youtube from '../util/youtube';
-import asyncForEach from '../util/async';
-import { logInOut } from '../util/auth';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import Track from "./Track";
+import AuthContext from "../contexts/AuthContext";
+import youtube from "../util/youtube";
+import asyncForEach from "../util/async";
+import { logInOut } from "../util/auth";
 
 class Mix extends Component {
   /**
@@ -13,10 +13,10 @@ class Mix extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      status: 'default',
-      playlistURL: '',
-      trackMessages: Array(this.props.tracklist.length).fill(''),
-      trackStatuses: Array(this.props.tracklist.length).fill(''),
+      status: "default",
+      playlistURL: "",
+      trackMessages: Array(this.props.tracklist.length).fill(""),
+      trackStatuses: Array(this.props.tracklist.length).fill("")
     };
   }
 
@@ -25,14 +25,17 @@ class Mix extends Component {
    */
   createPlaylist = async () => {
     await this.setState({
-      inProgress: 'searching',
-      trackStatuses: Array(this.props.tracklist.length).fill('searching'),
+      inProgress: "searching",
+      trackStatuses: Array(this.props.tracklist.length).fill("searching")
     });
     const { dj, description, locationDate, tracklist } = this.props;
     const playlistTitle = `${dj} - ${locationDate} | NTS Mix`;
 
     // Create the playlist and extract its ID
-    const createResponse = await youtube.createPlaylist(playlistTitle, description);
+    const createResponse = await youtube.createPlaylist(
+      playlistTitle,
+      description
+    );
     const playlistId = createResponse.id;
     // const playlistId = 'PLQ3YpXF4Wmw-KCQdRuG95gAQqEl_Y7C5d';
 
@@ -44,7 +47,7 @@ class Mix extends Component {
 
       // If no results are found, change the status/icon and process the next track
       if (searchResponse.items.length === 0) {
-        trackStatuses[i] = 'failed';
+        trackStatuses[i] = "failed";
         await this.setState({ trackStatuses });
         return;
       }
@@ -52,16 +55,16 @@ class Mix extends Component {
       // Otherwise, add the video to the playlist
       const { videoId } = searchResponse.items[0].id;
       await youtube.addVideoToPlaylist(playlistId, videoId);
-      trackStatuses[i] = 'success';
+      trackStatuses[i] = "success";
       await this.setState({ trackStatuses });
     });
 
     // Once all tracks have been processed, make the playlist available to open
     this.setState({
-      inProgress: 'complete',
-      playlistURL: `https://www.youtube.com/playlist?list=${playlistId}`,
+      inProgress: "complete",
+      playlistURL: `https://www.youtube.com/playlist?list=${playlistId}`
     });
-  }
+  };
 
   /**
    * Generate a context sensitive button depending on state
@@ -69,21 +72,52 @@ class Mix extends Component {
   button = (isAuthorized, gapiReady) => {
     const { inProgress } = this.state;
     switch (inProgress) {
-      case 'searching': return <div className="playlist-button-wrapper"><button className="playlist-button" onClick={this.createPlaylist} disabled><i className="fa fa-spinner spinner"></i> &nbsp; CREATING PLAYLIST </button></div>;
-      case 'complete': return <div className="playlist-button-wrapper"><button className="playlist-button" onClick={this.openPlaylist}><i className="fas fa-external-link-alt"></i> &nbsp; OPEN </button></div>;
+      case "searching":
+        return (
+          <div className="playlist-button-wrapper">
+            <button
+              className="playlist-button"
+              onClick={this.createPlaylist}
+              disabled
+            >
+              <i className="fa fa-spinner spinner" /> &nbsp; CREATING PLAYLIST{" "}
+            </button>
+          </div>
+        );
+      case "complete":
+        return (
+          <div className="playlist-button-wrapper">
+            <button className="playlist-button" onClick={this.openPlaylist}>
+              <i className="fas fa-external-link-alt" /> &nbsp; OPEN{" "}
+            </button>
+          </div>
+        );
       default:
-        if (isAuthorized && gapiReady) return <div className="playlist-button-wrapper"><button className="playlist-button" onClick={this.createPlaylist}><i className="far fa-plus-square"></i> &nbsp; CREATE PLAYLIST </button></div>;
-        return <div className="playlist-button-wrapper"><button className="playlist-button" onClick={logInOut} ><i class="fas fa-user"></i> &nbsp; LOG IN TO CREATE PLAYLIST </button></div>;
+        if (isAuthorized && gapiReady)
+          return (
+            <div className="playlist-button-wrapper">
+              <button className="playlist-button" onClick={this.createPlaylist}>
+                <i className="far fa-plus-square" /> &nbsp; CREATE PLAYLIST{" "}
+              </button>
+            </div>
+          );
+        return (
+          <div className="playlist-button-wrapper">
+            <button className="playlist-button" onClick={logInOut}>
+              <i class="fas fa-user" /> &nbsp; LOG IN TO CREATE PLAYLIST{" "}
+            </button>
+          </div>
+        );
     }
-  }
+  };
 
   /**
    * Open the created playlist in a new tab
    */
   openPlaylist = () => {
-    const win = window.open(this.state.playlistURL, '_blank');
+    const win = window.open(this.state.playlistURL, "_blank");
     win.focus();
-  }
+  };
 
   /**
    * Generate a collection of track components
@@ -91,15 +125,17 @@ class Mix extends Component {
   tracklist() {
     const { trackMessages, trackStatuses } = this.state;
     const { tracklist } = this.props;
-    if (tracklist.length === 0) return <div className="error">NO TRACKLIST PROVIDED</div>;
-    return tracklist.map((track, key) =>
+    if (tracklist.length === 0)
+      return <div className="error">NO TRACKLIST PROVIDED</div>;
+    return tracklist.map((track, key) => (
       <Track
         key={key}
         artist={track.artist}
         title={track.title}
         message={trackMessages[key]}
         status={trackStatuses[key]}
-      />);
+      />
+    ));
   }
 
   render() {
@@ -109,10 +145,12 @@ class Mix extends Component {
         <div className="panel-inner-wrapper">
           <h1>{dj.toUpperCase()}</h1>
           <p>{description}</p>
-          <hr/>
+          <hr />
           {this.tracklist()}
           <AuthContext.Consumer>
-            { ({ isAuthorized, gapiReady }) => tracklist.length > 0 && this.button(isAuthorized, gapiReady) }
+            {({ isAuthorized, gapiReady }) =>
+              tracklist.length > 0 && this.button(isAuthorized, gapiReady)
+            }
           </AuthContext.Consumer>
         </div>
       </div>
@@ -125,6 +163,6 @@ Mix.propTypes = {
   description: PropTypes.string.isRequired,
   locationDate: PropTypes.string.isRequired,
   tracklist: PropTypes.array.isRequired,
-  updateError: PropTypes.func.isRequired,
+  updateError: PropTypes.func.isRequired
 };
 export default Mix;

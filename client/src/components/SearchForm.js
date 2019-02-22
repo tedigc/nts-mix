@@ -1,33 +1,34 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import axios from 'axios';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import axios from "axios";
 
 class SearchForm extends Component {
   state = {
-    url: '',
-    searching: false,
-  }
+    url: "",
+    searching: false
+  };
 
-  searchForTracklist = (e) => {
+  searchForTracklist = e => {
     e.preventDefault();
     this.setState({ searching: true });
     this.props.updateMix({
-      dj: '',
-      description: '',
-      locationDate: '',
-      tracklist: [],
+      dj: "",
+      description: "",
+      locationDate: "",
+      tracklist: []
     });
     const { url } = this.state;
-    axios.post('/api/nts/tracklist', { url })
-      .then((result) => {
+    axios
+      .post("/api/nts/tracklist", { url })
+      .then(result => {
         this.setState({ searching: false });
         this.props.updateMix(result.data);
       })
-      .catch((err) => {
+      .catch(err => {
         this.setState({ searching: false });
         this.props.updateError(err.response.data.message);
       });
-  }
+  };
 
   // Returns a context-sensitive search button
   searchButton = () => {
@@ -35,24 +36,24 @@ class SearchForm extends Component {
     if (searching) {
       return (
         <button className="search-button" disabled={true}>
-          <i className="fas fa-spinner spinner"></i>
+          <i className="fas fa-spinner spinner" />
         </button>
       );
     }
     return (
       <button className="search-button">
-        <i className="fas fa-search"></i>
+        <i className="fas fa-search" />
       </button>
     );
-  }
+  };
 
   // Update the contents of the search input.
-  handleChange = (e) => {
+  handleChange = e => {
     e.preventDefault();
-    if (e.target.name === 'search-input') {
+    if (e.target.name === "search-input") {
       this.setState({ url: e.target.value });
     }
-  }
+  };
 
   render() {
     const { searching, url } = this.state;
@@ -64,7 +65,7 @@ class SearchForm extends Component {
             type="text"
             name="search-input"
             value={url}
-            placeholder='Paste an NTS mix URL here...'
+            placeholder="Paste an NTS mix URL here..."
             disabled={searching}
             onChange={this.handleChange}
           />
