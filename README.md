@@ -1,4 +1,4 @@
-# NTS mix
+# NTS mix (currently down for maintenance)
 
 A web app for creating music playlists, webscraped from NTS mixes, and powered by Google's YouTube v3 API.
 
