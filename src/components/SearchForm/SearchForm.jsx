@@ -1,22 +1,22 @@
-import React, { useState } from 'react'
-import { fetchAndParseMix } from '../../utils/nts'
-import { H2, Input, Button, SearchIcon, Form } from './SearchForm.styles'
-import { Card } from '../common.styles'
+import React, { useState } from 'react';
+import fetchAndParseMix from '../../utils/nts';
+import { H2, Input, Button, SearchIcon, Form } from './SearchForm.styles';
+import { Card } from '../common.styles';
 
 const SearchForm = ({ onSubmit, resetMix }) => {
-  const [isSearching, setIsSearching] = useState(false)
+  const [isSearching, setIsSearching] = useState(false);
   const [value, setValue] = useState(
     'https://www.nts.live/shows/we-are/episodes/suncut-x-we-are-3rd-october-2016'
-  )
+  );
 
   const handleSubmit = async e => {
-    e.preventDefault()
-    setIsSearching(true)
-    resetMix()
-    const mix = await fetchAndParseMix(value)
-    onSubmit(mix)
-    setIsSearching(false)
-  }
+    e.preventDefault();
+    setIsSearching(true);
+    resetMix();
+    const mix = await fetchAndParseMix(value);
+    onSubmit(mix);
+    setIsSearching(false);
+  };
 
   return (
     <Card>
@@ -33,7 +33,7 @@ const SearchForm = ({ onSubmit, resetMix }) => {
         />
       </Form>
     </Card>
-  )
-}
+  );
+};
 
-export default SearchForm
+export default SearchForm;

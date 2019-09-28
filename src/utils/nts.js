@@ -1,17 +1,17 @@
-const prefix = 'https://www.nts.live/api/v2'
+const prefix = 'https://www.nts.live/api/v2';
 
-export const fetchAndParseMix = async url => {
-  const { pathname } = new URL(url)
-  const target = `${prefix}${pathname}`
+export default async url => {
+  const { pathname } = new URL(url);
+  const target = `${prefix}${pathname}`;
   return fetch(target)
     .then(data => data.json())
     .then(json => {
-      const { name, description, location_long, broadcast, embeds } = json
-      const { tracklist } = embeds
+      const { name, description, location_long, broadcast, embeds } = json;
+      const { tracklist } = embeds;
 
-      const date = new Date(broadcast)
-      const dateShort = date.toLocaleDateString('en-GB')
-      const dateFormatted = dateShort.replace(/\//g, '.')
+      const date = new Date(broadcast);
+      const dateShort = date.toLocaleDateString('en-GB');
+      const dateFormatted = dateShort.replace(/\//g, '.');
 
       return {
         name,
@@ -19,6 +19,6 @@ export const fetchAndParseMix = async url => {
         date: dateFormatted,
         location: location_long,
         tracklist: tracklist.results
-      }
-    })
-}
+      };
+    });
+};

@@ -1,11 +1,9 @@
 /* global gapi */
-import config from '../config'
+import config from '../config';
 
-let GoogleAuth
-const SCOPE = 'https://www.googleapis.com/auth/youtube'
-const DISCOVERY_DOCS = [
-  'https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest'
-]
+let GoogleAuth;
+const SCOPE = 'https://www.googleapis.com/auth/youtube';
+const DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest'];
 
 //
 // Initialise the API client
@@ -22,21 +20,21 @@ export const initClient = setAuth => {
       discoveryDocs: DISCOVERY_DOCS
     })
     .then(() => {
-      GoogleAuth = gapi.auth2.getAuthInstance()
-      GoogleAuth.isSignedIn.listen(isAuthorized => setAuth(isAuthorized))
-      const user = GoogleAuth.currentUser.get()
-      const isAuthorized = user.hasGrantedScopes(SCOPE)
-      setAuth(isAuthorized)
+      GoogleAuth = gapi.auth2.getAuthInstance();
+      GoogleAuth.isSignedIn.listen(isAuthorized => setAuth(isAuthorized));
+      const user = GoogleAuth.currentUser.get();
+      const isAuthorized = user.hasGrantedScopes(SCOPE);
+      setAuth(isAuthorized);
     })
     .catch(error => {
-      console.log(error)
-    })
-}
+      console.log(error);
+    });
+};
 
 export const logInOut = () => {
   if (GoogleAuth.isSignedIn.get()) {
-    GoogleAuth.signOut()
+    GoogleAuth.signOut();
   } else {
-    GoogleAuth.signIn()
+    GoogleAuth.signIn();
   }
-}
+};

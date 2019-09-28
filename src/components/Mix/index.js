@@ -1,1 +1,1 @@
-export { default as Mix } from './Mix'
+export { default } from './Mix';

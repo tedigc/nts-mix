@@ -1,4 +1,4 @@
-export { LoginButton } from './LoginButton'
-export { SearchForm } from './SearchForm'
-export { Mix } from './Mix'
-export * from './common.styles'
+export { default as LoginButton } from './LoginButton';
+export { default as SearchForm } from './SearchForm';
+export { default as Mix } from './Mix';
+export * from './common.styles';

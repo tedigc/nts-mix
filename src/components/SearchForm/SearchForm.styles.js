@@ -1,14 +1,14 @@
-import styled from 'styled-components'
-import { ReactComponent as SearchSvgComponent } from '../../assets/search.svg'
+import styled from 'styled-components';
+import { ReactComponent as SearchSvgComponent } from '../../assets/search.svg';
 
 export const Form = styled.form`
   display: flex;
-`
+`;
 
 export const H2 = styled.h2`
   margin-left: 3.8rem;
   line-height: 1;
-`
+`;
 
 export const Input = styled.input`
   font-family: UniversCondensed;
@@ -25,7 +25,7 @@ export const Input = styled.input`
   &:disabled {
     opacity: 0.3;
   }
-`
+`;
 
 export const Button = styled.button`
   display: flex;
@@ -45,7 +45,7 @@ export const Button = styled.button`
   &:disabled {
     opacity: 0.3;
   }
-`
+`;
 
 export const SearchIcon = styled(SearchSvgComponent)`
   width: 2.5rem;
@@ -53,4 +53,4 @@ export const SearchIcon = styled(SearchSvgComponent)`
   & path {
     fill: white;
   }
-`
+`;
