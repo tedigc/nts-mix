@@ -1,68 +1,53 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# NTS mix
 
-## Available Scripts
+A web app for creating YouTube playlists from NTS mixes.
 
-In the project directory, you can run:
+## Getting started
 
-### `npm start`
+```
+$ git clone git@github.com:tedigc/nts-mix.git
+$ yarn
+$ yarn start
+```
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Enabling YouTube Data API v3
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+Before you actually start working with YouTube, you'll need to create a project using the Google Developer Console and obtain both an API key and an OAuth Client ID. Follow the steps below to get started.
 
-### `npm test`
+#### Creating a project
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. Head to the [Google Developer Console](https://console.developers.google.com)
+2. Create a new project
+3. Ensure your project is selected, and from the menu on the left hand side of the dashboard, select "Library".
+4. Search for "YouTube" and select the result "YouTube Data API v3".
+5. Click "enable" to add it to your project, then return to the dashboard.
 
-### `npm run build`
+#### Obtaining an API key
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Navigate to the "Credentials" page using the menu on the left hand side of the dashboard.
+2. Click the "Create Credentials" button and select "API Key".
+3. Click "Restrict Key" and give your key a sensible name, and apply any restrictions _(restrictions aren't necessary but are useful for security purposes)_
+4. Save your changes and return to the "Credentials" page
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+#### Obtaining an OAuth2 Client ID
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. Click the "Create Credentials" button and select "OAuth client ID".
+2. Click the "Configure consent screen" button and provide the necessary product name and email address. Click save.
+3. Select "Web Application" as the application type, name your client ID, and apply necessary restrictions.
 
-### `npm run eject`
+#### Linking credentials to code
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+1. Create a file `config.js` in the directory `client/src/` and populate it with the following:
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```
+export default {
+  apiKey: '<YOUR_API_KEY_HERE>',
+  clientId: '<YOUR_CLIENT_ID_HERE>'
+};
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+**NOTE**: Ensure you keep your authorisation credentials out of your version control. Do not remove `config.js` or either of the `build` directories from the `.gitignore` file.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+---
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+Author: [tedigc](https://github.com/tedigc)
