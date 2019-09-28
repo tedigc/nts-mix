@@ -1,7 +1,7 @@
 @font-face {
   font-family: 'UniversCondensed';
   src: local('UniversCondensed'),
-    url(./media/UniversCondensed.woff) format('woff');
+    url(./assets/UniversCondensed.woff) format('woff');
 }
 
 html,

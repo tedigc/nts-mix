@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import nts from '../../utils/nts'
+import { fetchAndParseMix } from '../../utils/nts'
 import { H2, Input, Button, SearchIcon, Form } from './SearchForm.styles'
 import { Card } from '../common.styles'
 
@@ -13,7 +13,7 @@ const SearchForm = ({ onSubmit, resetMix }) => {
     e.preventDefault()
     setIsSearching(true)
     resetMix()
-    const mix = await nts.search(value)
+    const mix = await fetchAndParseMix(value)
     onSubmit(mix)
     setIsSearching(false)
   }

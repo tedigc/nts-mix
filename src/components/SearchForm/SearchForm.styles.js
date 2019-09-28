@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { ReactComponent as SearchSvgComponent } from '../../media/search.svg'
+import { ReactComponent as SearchSvgComponent } from '../../assets/search.svg'
 
 export const Form = styled.form`
   display: flex;

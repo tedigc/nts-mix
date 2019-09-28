@@ -1,6 +1,6 @@
 const prefix = 'https://www.nts.live/api/v2'
 
-const search = async url => {
+export const fetchAndParseMix = async url => {
   const { pathname } = new URL(url)
   const target = `${prefix}${pathname}`
   return fetch(target)
@@ -21,8 +21,4 @@ const search = async url => {
         tracklist: tracklist.results
       }
     })
-}
-
-export default {
-  search
 }
