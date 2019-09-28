@@ -1,58 +1,68 @@
-# NTS mix (currently down for maintenance)
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-A web app for creating music playlists, webscraped from NTS mixes, and powered by Google's YouTube v3 API.
+## Available Scripts
 
-[NTS Radio](https://www.nts.live/) is an online radio station based in London with studios in Los Angeles, Shanghai and Manchester. Broadcasting underground music live, 24/7.
+In the project directory, you can run:
 
-Below are some of my favourite mixes. To try them with the app, just follow the link and paste the URL into NTS mix, then hit "search".
+### `npm start`
 
-* [DJ Koze & Róisín Murphy - London, 04.05.18](https://www.nts.live/shows/guests/episodes/dj-koze-roisin-murphy-4th-may-2018)
-* [Floating Points & Four Tet - Live from Love International - Tisno, 06.08.18](https://www.nts.live/shows/love-international-2018/episodes/floating-points-four-tet-live-from-love-international-2nd-july-2018)
-* [Bonobo - Los Angeles, 24.06.15](https://www.nts.live/shows/bonobo/episodes/bonobo-24thjune-2015)
+Runs the app in the development mode.<br>
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
----
+The page will reload if you make edits.<br>
+You will also see any lint errors in the console.
 
-To get started:
+### `npm test`
 
-```
-$ git clone https://github.com/tedigc/nts-mix
-$ npm run setup
-$ npm start
-```
+Launches the test runner in the interactive watch mode.<br>
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### Enabling YouTube Data API v3
+### `npm run build`
 
-Before you actually start working with YouTube, you'll need to create a project using the Google Developer Console and obtain both an API key and an OAuth Client ID. Follow the steps below to get started.
+Builds the app for production to the `build` folder.<br>
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-#### Creating a project
-1. Head to the [Google Developer Console](https://console.developers.google.com)
-2. Create a new project
-3. Ensure your project is selected, and from the menu on the left hand side of the dashboard, select "Library".
-4. Search for "YouTube" and select the result "YouTube Data API v3".
-5. Click "enable" to add it to your project, then return to the dashboard.
+The build is minified and the filenames include the hashes.<br>
+Your app is ready to be deployed!
 
-#### Obtaining an API key
-1. Navigate to the "Credentials" page using the menu on the left hand side of the dashboard.
-2. Click the "Create Credentials" button and select "API Key".
-3. Click "Restrict Key" and give your key a sensible name, and apply any restrictions *(restrictions aren't necessary but are useful for security purposes)*
-4. Save your changes and return to the "Credentials" page
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-#### Obtaining an OAuth2 Client ID
-1. Click the "Create Credentials" button and select "OAuth client ID".
-2. Click the "Configure consent screen" button and provide the necessary product name and email address. Click save.
-3. Select "Web Application" as the application type, name your client ID, and apply necessary restrictions.
+### `npm run eject`
 
-#### Linking credentials to code
-1. Create a file `config.js` in the directory `client/src/` and populate it with the following:
-```
-export default {
-  apiKey: '<YOUR_API_KEY_HERE>',
-  clientId: '<YOUR_CLIENT_ID_HERE>'
-};
-```
+**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-**NOTE**: Ensure you keep your authorisation credentials out of your version control. Do not remove `config.js` or either of the `build` directories from the `.gitignore` file.
+If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
----
+Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-Author: [tedigc](https://github.com/tedigc)
+You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+
+## Learn More
+
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+
+To learn React, check out the [React documentation](https://reactjs.org/).
+
+### Code Splitting
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+
+### Analyzing the Bundle Size
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+
+### Making a Progressive Web App
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+
+### Advanced Configuration
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+
+### Deployment
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+
+### `npm run build` fails to minify
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify

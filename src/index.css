@@ -1,0 +1,84 @@
+@font-face {
+  font-family: 'UniversCondensed';
+  src: local('UniversCondensed'),
+    url(./media/UniversCondensed.woff) format('woff');
+}
+
+html,
+body {
+  color: white;
+  background-color: black;
+  margin: 0;
+  padding: 0;
+  font-size: 62.5%;
+}
+
+* {
+  font-family: Arial;
+  letter-spacing: 0.05px;
+  overflow-y: visible;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-shadow: rgba(0, 0, 0, 0.01) 0 0 1px;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+
+  color: white;
+}
+
+body {
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+    url('https://media.ntslive.co.uk/resize/1600x1600/65676e0a-667a-4906-a6d7-5518f312b4e4_1565568000.jpeg');
+  height: 100vh;
+}
+
+ul,
+li {
+  list-style: none;
+}
+
+p,
+input,
+strong,
+span,
+button {
+  font-size: 1.6rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: UniversCondensed;
+}
+
+h2 {
+  font-size: 1.6rem;
+}
+
+/* Transition */
+.fade-enter {
+  opacity: 0;
+  margin-top: 1.6rem;
+}
+
+.fade-enter-active {
+  opacity: 1;
+  margin-top: 0;
+  transition: all 400ms ease-in-out;
+}
+
+.fade-exit {
+  opacity: 1;
+  margin-top: 0;
+}
+
+.fade-exit-active {
+  opacity: 0;
+  margin-top: 1.6rem;
+  transition: all 400ms ease-in-out;
+}

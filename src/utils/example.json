@@ -1,0 +1,31 @@
+{
+  "dj": "Suncut",
+  "description": "Tune in to the sound of SUNCUT, boasting a heartfelt selection of some favourite 45’s through to classic bonafide soulful jams.Tune in to the sound of SUNCUT, boasting a heartfelt selection of some favourite 45’s through to classic bonafide soulful jams.",
+  "locationDate": "London, 22.07.19",
+  "tracklist": [
+    {
+      "artist": "The Sylvers The Sylvers",
+      "title": "What’s It All About (Tell Me)"
+    },
+    { "artist": "Weldon Irvine Weldon Irvine", "title": "The Sisters" },
+    { "artist": "Bobby Womack Bobby Womack", "title": "Woman´s Gotta Have It" },
+    { "artist": "The Chi-Lites The Chi-Lites", "title": "Go Away Dream" },
+    { "artist": "Paris Paris", "title": "I Choose You" },
+    { "artist": "Joyce Joyce", "title": "De Frente Pro Crime" },
+    {
+      "artist": "Earth, Wind And Fire Earth, Wind And Fire",
+      "title": "Energy"
+    },
+    {
+      "artist": "Ethnic Heritage Ensemble Ethnic Heritage Ensemble",
+      "title": "N2 Deep"
+    },
+    {
+      "artist": "Alicia Myers Alicia Myers",
+      "title": "You Get The Best From Me (Say Say Say)"
+    },
+    { "artist": "Linda Williams Linda Williams", "title": "City Living" },
+    { "artist": "Blue Magic Blue Magic", "title": "Welcome To The Club" },
+    { "artist": "John Gibbs John Gibbs", "title": "Trinidad" }
+  ]
+}
