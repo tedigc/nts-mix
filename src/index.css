@@ -1,7 +1,6 @@
 @font-face {
   font-family: 'UniversCondensed';
-  src: local('UniversCondensed'),
-    url(./assets/UniversCondensed.woff) format('woff');
+  src: local('UniversCondensed'), url(./assets/UniversCondensed.woff) format('woff');
 }
 
 html,
@@ -28,10 +27,17 @@ body {
   color: white;
 }
 
+html {
+  height: 100vh;
+}
+
 body {
   background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
     url('https://media.ntslive.co.uk/resize/1600x1600/65676e0a-667a-4906-a6d7-5518f312b4e4_1565568000.jpeg');
-  height: 100vh;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+  overflow: hidden;
 }
 
 ul,
