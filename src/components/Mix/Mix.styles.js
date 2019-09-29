@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const DJ = styled.h2`
   font-size: 2.4rem;
@@ -62,12 +62,13 @@ export const BioWrapper = styled.div`
   justify-content: space-between;
 `;
 
-export const CreatePlaylistButton = styled.button`
+const commonStyles = css`
   text-transform: uppercase;
   border: 1px solid white;
   height: 3.2rem;
   background-color: black;
   font-family: UniversCondensed;
+  font-size: 1.6rem;
   white-space: nowrap;
   padding-left: 1.6rem;
   padding-right: 1.6rem;
@@ -82,4 +83,15 @@ export const CreatePlaylistButton = styled.button`
     opacity: 0.3;
     cursor: default;
   }
+`;
+
+export const Button = styled.button`
+  ${commonStyles}
+`;
+
+export const Link = styled.a`
+  ${commonStyles}
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
 `;

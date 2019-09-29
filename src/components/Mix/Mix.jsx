@@ -3,20 +3,23 @@ import classNames from 'classnames';
 import youtube from '../../utils/youtube';
 import { Card } from '../common.styles';
 import {
-  Track,
-  Artist,
-  Title,
-  DJ,
   Description,
-  Location,
-  Hr,
   BioWrapper,
-  CreatePlaylistButton
+  Location,
+  Artist,
+  Button,
+  Track,
+  Title,
+  Link,
+  DJ,
+  Hr
 } from './Mix.styles';
 
 const Mix = ({ mix }) => {
+  const [playlistUrl, setPlaylistUrl] = useState('temp');
   const [buttonText, setButtonText] = useState('CREATE PLAYLIST');
   const [isCreating, setIsCreating] = useState(false);
+  const [isComplete, setIsComplete] = useState(true);
   const [trackIdx, setTrackIdx] = useState(-1);
 
   const handleClickCreate = async () => {
@@ -24,7 +27,7 @@ const Mix = ({ mix }) => {
     setButtonText('IN PROGRESS');
 
     // Create new playlist
-    const title = `${mix.name} | ${mix.locationDate}`;
+    const title = `${mix.name} | ${mix.date}`;
     const newPlaylist = await youtube.createPlaylist(title, mix.description);
     const playlistId = newPlaylist.id;
 
@@ -39,8 +42,13 @@ const Mix = ({ mix }) => {
       }
     }
 
-    setTrackIdx(mix.tracklist.length + 1);
+    // Enable the 'Go to playlist' link
+    const urlPrefix = 'https://www.youtube.com/playlist?list=';
+    const playlistUrl = `${urlPrefix}${playlistId}`;
+    setPlaylistUrl(playlistUrl);
     setButtonText('COMPLETE');
+    setIsComplete(true);
+    setTrackIdx(mix.tracklist.length + 1);
   };
 
   return (
@@ -50,9 +58,9 @@ const Mix = ({ mix }) => {
           <DJ>{mix.name}</DJ>
           <Location>{mix.locationDate}</Location>
         </section>
-        <CreatePlaylistButton disabled={isCreating} onClick={handleClickCreate}>
+        <Button disabled={isCreating} onClick={handleClickCreate}>
           {buttonText}
-        </CreatePlaylistButton>
+        </Button>
       </BioWrapper>
       <Hr />
       <Description>{mix.description}</Description>
@@ -68,6 +76,11 @@ const Mix = ({ mix }) => {
             </Track>
           );
         })}
+        {isComplete && playlistUrl && (
+          <Link href={playlistUrl} target="_blank">
+            GO TO PLAYLIST
+          </Link>
+        )}
       </section>
     </Card>
   );
