@@ -23,8 +23,29 @@ export const Main = styled.main`
 export const Page = styled.section`
   width: 100%;
   position: absolute;
-  /* bottom: 0;
-  right: 0;
-  left: 0; */
   top: 0;
+`;
+
+export const H1 = styled.h1`
+  font-size: 1.6rem;
+  line-height: 1;
+  text-transform: capitalize;
+`;
+
+export const LoadingSpinner = styled.div`
+  @keyframes donut-spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  display: inline-block;
+  border: 2px solid black;
+  border-left-color: white;
+  border-radius: 50%;
+  width: ${({ size = '16px' }) => size};
+  height: ${({ size = '16px' }) => size};
+  animation: donut-spin 1.2s linear infinite;
 `;

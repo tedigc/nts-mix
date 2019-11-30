@@ -17,8 +17,8 @@ export const Hr = styled.hr`
   height: 1px;
   color: white;
   background-color: white;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  margin-top: 1.6rem;
+  margin-bottom: 1.6rem;
 `;
 
 export const Description = styled.p`

@@ -52,7 +52,7 @@ const Mix = ({ mix }) => {
   };
 
   return (
-    <Card>
+    <>
       <BioWrapper>
         <section id="bio">
           <DJ>{mix.name}</DJ>
@@ -62,6 +62,7 @@ const Mix = ({ mix }) => {
           {buttonText}
         </Button>
       </BioWrapper>
+
       <Hr />
       <Description>{mix.description}</Description>
       <section id="mix">
@@ -82,7 +83,7 @@ const Mix = ({ mix }) => {
           </Link>
         )}
       </section>
-    </Card>
+    </>
   );
 };
 

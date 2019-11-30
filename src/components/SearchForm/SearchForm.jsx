@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { Box } from '@rebass/grid';
 import fetchAndParseMix from '../../utils/nts';
-import { H2, Input, Button, SearchIcon, Form } from './SearchForm.styles';
-import { Card } from '../common.styles';
+import { Input, Button, SearchIcon, Form } from './SearchForm.styles';
+import { H1, Card } from '../common.styles';
 
 const pattern = /https:\/\/www.nts.live\/shows\/([a-z-]+)\/episodes\/([a-z0-9-]+)$/;
 
@@ -32,7 +33,9 @@ const SearchForm = ({ onSubmit, resetMix }) => {
 
   return (
     <Card>
-      <H2>PASTE NTS URL</H2>
+      <Box ml="3.8rem">
+        <H1>PASTE NTS URL</H1>
+      </Box>
       <Form onSubmit={handleSubmit}>
         <Button type="submit" disabled={isSearching}>
           <SearchIcon />

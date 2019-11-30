@@ -1,8 +1,7 @@
-const prefix = 'https://www.nts.live/api/v2';
+const prefix = 'https://www.nts.live/api/v2/shows';
 
-export default async url => {
-  const { pathname } = new URL(url);
-  const target = `${prefix}${pathname}`;
+export default async (artist, episode) => {
+  const target = `${prefix}/${artist}/episodes/${episode}`;
   return fetch(target)
     .then(data => data.json())
     .then(json => {

@@ -8,9 +8,9 @@ import MixPage from './pages/MixPage';
 import './index.css';
 
 const transition = {
-  // unmountOnExit: true,
+  unmountOnExit: true,
   classNames: 'fade',
-  timeout: { enter: 500, exit: 500 }
+  timeout: { enter: 300, exit: 300 }
 };
 
 const routes = [
@@ -18,7 +18,7 @@ const routes = [
   { path: '/:artist/:episode', name: 'Mix', component: MixPage, exact: true }
 ];
 
-const Temp = () => {
+const Routes = () => {
   const location = useLocation();
   return (
     <TransitionGroup>
@@ -35,4 +35,4 @@ const Temp = () => {
   );
 };
 
-export default Temp;
+export default Routes;

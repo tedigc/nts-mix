@@ -5,11 +5,6 @@ export const Form = styled.form`
   display: flex;
 `;
 
-export const H2 = styled.h2`
-  margin-left: 3.8rem;
-  line-height: 1;
-`;
-
 export const Input = styled.input`
   font-family: UniversCondensed;
   font-size: 1.6rem;
